@@ -3,6 +3,7 @@ package com.matedevs.protectthetown.object;
 import java.util.Random;
 
 import org.andengine.engine.camera.Camera;
+import org.andengine.entity.IEntity;
 import org.andengine.entity.modifier.LoopEntityModifier;
 import org.andengine.entity.modifier.RotationModifier;
 import org.andengine.entity.sprite.Sprite;
@@ -22,6 +23,7 @@ public class LargeRock extends Sprite{
 
 	private Body body;
 	private FixtureDef fixture;
+	private float savedRotation = 0;
 	
 	public LargeRock(float pX, float pY, VertexBufferObjectManager vbom, Camera camera, PhysicsWorld physicsWorld) {
 		super(pX, pY, ResourcesManager.getInstance().game_large_rock_region.deepCopy(), vbom);
@@ -59,7 +61,13 @@ public class LargeRock extends Sprite{
 				body.setAngularVelocity(omega);
 			}
 		});
-		this.registerEntityModifier(new LoopEntityModifier(new RotationModifier(5, 0, -(omega * 180))));
+		this.registerEntityModifier(new LoopEntityModifier(new RotationModifier(5, savedRotation, savedRotation - omega * 180)) {
+			@Override
+			protected void onModifierFinished(IEntity pItem) {
+				super.onModifierFinished(pItem);
+				savedRotation = LargeRock.this.getRotation();
+			}
+		});
 	}
 	
 	public void setLargeRockDirection(float x, float y) {

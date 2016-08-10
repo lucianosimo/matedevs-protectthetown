@@ -461,8 +461,7 @@ public class GameScene extends BaseScene{
 		rock.setVisible(false);
 		rock.getRockBody().setActive(false);
 		rock.setIgnoreUpdate(true);
-		
-		//GameScene.this.unregisterTouchArea(rock);
+
 		rockList.add(rock);
 	}
 	
@@ -472,8 +471,7 @@ public class GameScene extends BaseScene{
 		smallRock.setVisible(false);
 		smallRock.getSmallRockBody().setActive(false);
 		smallRock.setIgnoreUpdate(true);
-		
-		//GameScene.this.unregisterTouchArea(smallRock);
+
 		smallRockList.add(smallRock);
 		
 	}
@@ -493,29 +491,39 @@ public class GameScene extends BaseScene{
 		smallRockList = new ArrayList<SmallRock>();
 		
 		for (int i = 0; i < 10; i++) {
-			Rock rock = new Rock(10000, 10000, vbom, camera, physicsWorld) {
-				@Override
-				protected void onManagedUpdate(float pSecondsElapsed) {
-					super.onManagedUpdate(pSecondsElapsed);
-					if (destroyAllEnemies && this.getRockBody().isActive() && availablePause && !gameOver) {
-						if (this.getX() > 0 && this.getX() < 1280 && this.getY() > 0 && this.getY() < 720) {
-							final Rock ref = this;
-							engine.runOnUpdateThread(new Runnable() {
-								
-								@Override
-								public void run() {
-									addScore(ROCK_SCORE);
-									destroyRock(ref);
-								}
-							});
-						}
-					}
-					
-					if (this.getX() < 0) {
-						regenerateRocks(this.getRockBody());
-					}
-					
-					if (this.collidesWith(dome) && this.getRockBody().isActive()) {
+			Rock rock = getNewRock();
+			addRockToArrayList(rock);
+		}
+		
+		for (int i = 0; i < 20; i++) {
+			SmallRock smallRock = getNewSmallRock();
+			addSmallRockToArrayList(smallRock);
+		}
+	}
+	
+	private void addRockToArrayList(Rock rock) {
+		GameScene.this.attachChild(rock);
+		GameScene.this.registerTouchArea(rock);
+		rock.setCullingEnabled(true);
+		
+		rockList.add(rock);
+	}
+	
+	private void addSmallRockToArrayList(SmallRock smallRock) {
+		GameScene.this.attachChild(smallRock);
+		GameScene.this.registerTouchArea(smallRock);
+		smallRock.setCullingEnabled(true);
+		
+		smallRockList.add(smallRock);
+	}
+	
+	private Rock getNewRock() {
+		Rock rock = new Rock(10000, 10000, vbom, camera, physicsWorld) {
+			@Override
+			protected void onManagedUpdate(float pSecondsElapsed) {
+				super.onManagedUpdate(pSecondsElapsed);
+				if (destroyAllEnemies && this.getRockBody().isActive() && availablePause && !gameOver) {
+					if (this.getX() > 0 && this.getX() < 1280 && this.getY() > 0 && this.getY() < 720) {
 						final Rock ref = this;
 						engine.runOnUpdateThread(new Runnable() {
 							
@@ -527,60 +535,59 @@ public class GameScene extends BaseScene{
 						});
 					}
 				}
-				@Override
-				public boolean onAreaTouched(TouchEvent pSceneTouchEvent,float pTouchAreaLocalX, float pTouchAreaLocalY) {
-					if (pSceneTouchEvent.isActionDown()) {
-						final Rock ref = this;
-						engine.runOnUpdateThread(new Runnable() {
-							
-							@Override
-							public void run() {
-								if (ref.getRockBody().isActive() && availablePause && !gameOver) {
-									createSmallRockFromRock(ref.getX() + 5, ref.getY(), ROCK_POSITIVE_VEL_X);
-									createSmallRockFromRock(ref.getX() - 5, ref.getY(), ROCK_NEGATIVE_VEL_X);
-									addScore(ROCK_SCORE);
-									destroyRock(ref);
-								}										
-							}
-						});	
-					}
-								
-					return true;
+				
+				if (this.getX() < 0) {
+					regenerateRocks(this.getRockBody());
 				}
 				
-			};
-			
-			GameScene.this.attachChild(rock);
-			GameScene.this.registerTouchArea(rock);
-			rock.setCullingEnabled(true);
-			
-			rockList.add(rock);
-		}
-		
-		for (int i = 0; i < 20; i++) {
-			SmallRock smallRock = new SmallRock(10000, 10000, vbom, camera, physicsWorld) {
-				@Override
-				protected void onManagedUpdate(float pSecondsElapsed) {
-					super.onManagedUpdate(pSecondsElapsed);
-					if (destroyAllEnemies && this.getSmallRockBody().isActive() && availablePause && !gameOver) {
-						if (this.getX() > 0 && this.getX() < 1280 && this.getY() > 0 && this.getY() < 720) {
-							final SmallRock ref = this;
-							engine.runOnUpdateThread(new Runnable() {
-								
-								@Override
-								public void run() {
-									addScore(SMALL_ROCK_SCORE);
-									destroySmallRock(ref);
-								}
-							});
+				if (this.collidesWith(dome) && this.getRockBody().isActive()) {
+					final Rock ref = this;
+					engine.runOnUpdateThread(new Runnable() {
+						
+						@Override
+						public void run() {
+							addScore(ROCK_SCORE);
+							destroyRock(ref);
 						}
-					}
+					});
+				}
+			}
+			@Override
+			public boolean onAreaTouched(TouchEvent pSceneTouchEvent,float pTouchAreaLocalX, float pTouchAreaLocalY) {
+				if (pSceneTouchEvent.isActionDown()) {
+					final Rock ref = this;
+					engine.runOnUpdateThread(new Runnable() {
+						
+						@Override
+						public void run() {
+							if (ref.getRockBody().isActive() && availablePause && !gameOver) {
+								createSmallRockFromRock(ref.getX() + 5, ref.getY(), ROCK_POSITIVE_VEL_X);
+								createSmallRockFromRock(ref.getX() - 5, ref.getY(), ROCK_NEGATIVE_VEL_X);
+								addScore(ROCK_SCORE);
+								destroyRock(ref);
+							}										
+						}
+					});	
 					
-					if (this.getX() < 0) {
-						regenerateRocks(this.getSmallRockBody());
-					}
-					
-					if (this.collidesWith(dome) && this.getSmallRockBody().isActive()) {
+					setTouchAreaBindingOnActionDownEnabled(false);
+					setTouchAreaBindingOnActionMoveEnabled(false);
+				}
+							
+				return true;
+			}
+			
+		};
+		
+		return rock;
+	}
+	
+	private SmallRock getNewSmallRock() {
+		SmallRock smallRock = new SmallRock(10000, 10000, vbom, camera, physicsWorld) {
+			@Override
+			protected void onManagedUpdate(float pSecondsElapsed) {
+				super.onManagedUpdate(pSecondsElapsed);
+				if (destroyAllEnemies && this.getSmallRockBody().isActive() && availablePause && !gameOver) {
+					if (this.getX() > 0 && this.getX() < 1280 && this.getY() > 0 && this.getY() < 720) {
 						final SmallRock ref = this;
 						engine.runOnUpdateThread(new Runnable() {
 							
@@ -592,32 +599,47 @@ public class GameScene extends BaseScene{
 						});
 					}
 				}
-				@Override
-				public boolean onAreaTouched(TouchEvent pSceneTouchEvent,float pTouchAreaLocalX, float pTouchAreaLocalY) {
-					if (pSceneTouchEvent.isActionDown()) {
-						final SmallRock ref = this;
-						engine.runOnUpdateThread(new Runnable() {
-							
-							@Override
-							public void run() {
-								if (ref.getSmallRockBody().isActive() && availablePause && !gameOver) {
-									addScore(SMALL_ROCK_SCORE);
-									destroySmallRock(ref);
-								}
-							}
-						});
-					}
-									
-					return true;
+				
+				if (this.getX() < 0) {
+					regenerateRocks(this.getSmallRockBody());
 				}
+				
+				if (this.collidesWith(dome) && this.getSmallRockBody().isActive()) {
+					final SmallRock ref = this;
+					engine.runOnUpdateThread(new Runnable() {
+						
+						@Override
+						public void run() {
+							addScore(SMALL_ROCK_SCORE);
+							destroySmallRock(ref);
+						}
+					});
+				}
+			}
+			@Override
+			public boolean onAreaTouched(TouchEvent pSceneTouchEvent,float pTouchAreaLocalX, float pTouchAreaLocalY) {
+				if (pSceneTouchEvent.isActionDown()) {
+					final SmallRock ref = this;
+					engine.runOnUpdateThread(new Runnable() {
+						
+						@Override
+						public void run() {
+							if (ref.getSmallRockBody().isActive() && availablePause && !gameOver) {
+								addScore(SMALL_ROCK_SCORE);
+								destroySmallRock(ref);
+							}
+						}
+					});
+					
+					setTouchAreaBindingOnActionDownEnabled(false);
+					setTouchAreaBindingOnActionMoveEnabled(false);
+				}
+								
+				return true;
+			}
 
-			};
-			GameScene.this.attachChild(smallRock);
-			GameScene.this.registerTouchArea(smallRock);
-			smallRock.setCullingEnabled(true);
-			
-			smallRockList.add(smallRock);
-		}
+		};
+		return smallRock;
 	}
 	
 	private void createUfos() {
@@ -968,6 +990,9 @@ public class GameScene extends BaseScene{
 							}						
 						}
 					});
+					
+					setTouchAreaBindingOnActionDownEnabled(false);
+					setTouchAreaBindingOnActionMoveEnabled(false);
 				}
 				
 				return true;
@@ -992,62 +1017,11 @@ public class GameScene extends BaseScene{
 		final float yVel = -(rand.nextInt(ROCK_MAX_RANDOM_Y_VEL) + ROCK_MIN_RANDOM_Y_VEL);
 		final float velocityMultiplier = rand.nextInt(VELOCITY_MULTIPLIER_MAX_RANDOM - VELOCITY_MULTIPLIER_MIN_RANDOM + 1) + VELOCITY_MULTIPLIER_MIN_RANDOM;
 		
-		/*Rock rock = new Rock(x, y, vbom, camera, physicsWorld) {
-			@Override
-			protected void onManagedUpdate(float pSecondsElapsed) {
-				super.onManagedUpdate(pSecondsElapsed);
-				if (destroyAllEnemies && this.getRockBody().isActive() && availablePause && !gameOver) {
-					if (this.getX() > 0 && this.getX() < 1280 && this.getY() > 0 && this.getY() < 720) {
-						final Rock ref = this;
-						engine.runOnUpdateThread(new Runnable() {
-							
-							@Override
-							public void run() {
-								addScore(ROCK_SCORE);
-								destroyRock(ref);
-							}
-						});
-					}
-				}
-				
-				if (this.getX() < 0) {
-					regenerateRocks(this.getRockBody());
-				}
-				
-				if (this.collidesWith(dome) && this.getRockBody().isActive()) {
-					final Rock ref = this;
-					engine.runOnUpdateThread(new Runnable() {
-						
-						@Override
-						public void run() {
-							addScore(ROCK_SCORE);
-							destroyRock(ref);
-						}
-					});
-				}
-			}
-			@Override
-			public boolean onAreaTouched(TouchEvent pSceneTouchEvent,float pTouchAreaLocalX, float pTouchAreaLocalY) {
-				if (pSceneTouchEvent.isActionDown()) {
-					final Rock ref = this;
-					engine.runOnUpdateThread(new Runnable() {
-						
-						@Override
-						public void run() {
-							if (ref.getRockBody().isActive() && availablePause && !gameOver) {
-								createSmallRockFromRock(ref.getX() + 5, ref.getY(), ROCK_POSITIVE_VEL_X);
-								createSmallRockFromRock(ref.getX() - 5, ref.getY(), ROCK_NEGATIVE_VEL_X);
-								addScore(ROCK_SCORE);
-								destroyRock(ref);
-							}										
-						}
-					});	
-				}
-							
-				return true;
-			}
-			
-		};*/
+		if (rockList.size() == 0) {
+			Rock rock = getNewRock();
+			addRockToArrayList(rock);
+		}
+		
 		Rock rock = rockList.get(rockList.size() - 1);
 		rockList.remove(rockList.size() - 1);
 		
@@ -1071,60 +1045,10 @@ public class GameScene extends BaseScene{
 		final float yVel = -(rand.nextInt(SMALL_ROCK_MAX_RANDOM_Y_VEL) + SMALL_ROCK_MIN_RANDOM_Y_VEL);
 		final float velocityMultiplier = rand.nextInt(VELOCITY_MULTIPLIER_MAX_RANDOM - VELOCITY_MULTIPLIER_MIN_RANDOM + 1) + VELOCITY_MULTIPLIER_MIN_RANDOM;
 		
-		/*SmallRock smallRock = new SmallRock(x, y, vbom, camera, physicsWorld) {
-			@Override
-			protected void onManagedUpdate(float pSecondsElapsed) {
-				super.onManagedUpdate(pSecondsElapsed);
-				if (destroyAllEnemies && this.getSmallRockBody().isActive() && availablePause && !gameOver) {
-					if (this.getX() > 0 && this.getX() < 1280 && this.getY() > 0 && this.getY() < 720) {
-						final SmallRock ref = this;
-						engine.runOnUpdateThread(new Runnable() {
-							
-							@Override
-							public void run() {
-								addScore(SMALL_ROCK_SCORE);
-								destroySmallRock(ref);
-							}
-						});
-					}
-				}
-				
-				if (this.getX() < 0) {
-					regenerateRocks(this.getSmallRockBody());
-				}
-				
-				if (this.collidesWith(dome) && this.getSmallRockBody().isActive()) {
-					final SmallRock ref = this;
-					engine.runOnUpdateThread(new Runnable() {
-						
-						@Override
-						public void run() {
-							addScore(SMALL_ROCK_SCORE);
-							destroySmallRock(ref);
-						}
-					});
-				}
-			}
-			@Override
-			public boolean onAreaTouched(TouchEvent pSceneTouchEvent,float pTouchAreaLocalX, float pTouchAreaLocalY) {
-				if (pSceneTouchEvent.isActionDown()) {
-					final SmallRock ref = this;
-					engine.runOnUpdateThread(new Runnable() {
-						
-						@Override
-						public void run() {
-							if (ref.getSmallRockBody().isActive() && availablePause && !gameOver) {
-								addScore(SMALL_ROCK_SCORE);
-								destroySmallRock(ref);
-							}
-						}
-					});
-				}
-								
-				return true;
-			}
-			
-		};*/
+		if (smallRockList.size() == 0) {
+			SmallRock smallRock = getNewSmallRock();
+			addSmallRockToArrayList(smallRock);
+		}
 		
 		SmallRock smallRock = smallRockList.get(smallRockList.size() - 1);
 		smallRockList.remove(smallRockList.size() - 1);
@@ -1138,9 +1062,7 @@ public class GameScene extends BaseScene{
 		smallRock.getSmallRockBody().setActive(true);
 		smallRock.setIgnoreUpdate(false);
 				
-		smallRock.setCullingEnabled(true);
-		/*GameScene.this.attachChild(smallRock);
-		GameScene.this.registerTouchArea(smallRock);*/		
+		smallRock.setCullingEnabled(true);	
 	}
 	
 	/*
@@ -1570,8 +1492,6 @@ public class GameScene extends BaseScene{
 	    				}
 	    			});
 	    			
-	    			//GameScene.this.detachChild(this);
-	    			
         		}
         		return true;
         	};
@@ -1917,7 +1837,8 @@ public class GameScene extends BaseScene{
 	}
 	
 	private void gameOver() {
-		gameOverWindow = new Sprite(0, 0, resourcesManager.game_over_window_region, vbom);
+		final IEaseFunction[] easeFunction = EASEFUNCTIONS[0];
+
 		Rectangle fade = new Rectangle(screenWidth/2, screenHeight/2, screenWidth, screenHeight, vbom);
 		
 		newRecord = new Sprite(600, 325, resourcesManager.game_new_record_region, vbom);
@@ -1940,7 +1861,8 @@ public class GameScene extends BaseScene{
 		availablePause = false;
 		gameOver = true;
 
-		gameOverWindow.setPosition(camera.getCenterX(), camera.getCenterY());
+		gameOverWindow.registerEntityModifier(new MoveModifier(HELP_WINDOW_MOVE_MODIFIER_DURATION_MILISECONDS, screenWidth/2, 
+				1200, screenWidth/2, screenHeight/2, easeFunction[0]));
 		
 		retryButton = new Sprite(550, 25, resourcesManager.game_retry_button_region, vbom){
 	    	public boolean onAreaTouched(TouchEvent pSceneTouchEvent, float pTouchAreaLocalX, float pTouchAreaLocalY) {
@@ -2005,7 +1927,7 @@ public class GameScene extends BaseScene{
 		gameOverWindow.attachChild(newRecord);
 		gameOverWindow.attachChild(twitterButton);
 		
-		GameScene.this.setIgnoreUpdate(true);
+		//GameScene.this.setIgnoreUpdate(true);
 				
 	}
 	
