@@ -60,7 +60,7 @@ public class GameActivity extends BaseGameActivity implements GoogleApiClient.Co
 	public EngineOptions onCreateEngineOptions() {
 		camera = new BoundCamera(0, 0, 1280, 720);
 		EngineOptions engineOptions = new EngineOptions(true, ScreenOrientation.LANDSCAPE_FIXED, new FillResolutionPolicy(), this.camera);
-		engineOptions.getAudioOptions().setNeedsMusic(true).setNeedsSound(true);
+		engineOptions.getAudioOptions().setNeedsSound(true);
 		engineOptions.getRenderOptions().setDithering(true);
 		engineOptions.setWakeLockOptions(WakeLockOptions.SCREEN_ON);
 		return engineOptions;
@@ -71,7 +71,7 @@ public class GameActivity extends BaseGameActivity implements GoogleApiClient.Co
 	protected void onPause() {
 		super.onPause();
 		mEngine.getSoundManager().setMasterVolume(0);
-		mEngine.getMusicManager().setMasterVolume(0);
+		//mEngine.getMusicManager().setMasterVolume(0);
 	}
 	
 	@Override
@@ -79,17 +79,17 @@ public class GameActivity extends BaseGameActivity implements GoogleApiClient.Co
 		super.onResume();
 		SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
 		int soundEnabled = sharedPreferences.getInt("soundEnabled", 0);
-		int musicEnabled = sharedPreferences.getInt("musicEnabled", 0);
+		//int musicEnabled = sharedPreferences.getInt("musicEnabled", 0);
 		if (soundEnabled == 1) {
 			enableSound(false);
 		} else if (soundEnabled == 0) {
 			enableSound(true);
 		}
-		if (musicEnabled == 1) {
+		/*if (musicEnabled == 1) {
 			enableMusic(false);
 		} else if (musicEnabled == 0) {
 			enableMusic(true);
-		}
+		}*/
 	}
 	
 	public void enableSound(boolean enable) {
@@ -100,13 +100,13 @@ public class GameActivity extends BaseGameActivity implements GoogleApiClient.Co
 		}
 	}
 	
-	public void enableMusic(boolean enable) {
+	/*public void enableMusic(boolean enable) {
 		if (enable) {
 			mEngine.getMusicManager().setMasterVolume(1);
 		} else {
 			mEngine.getMusicManager().setMasterVolume(0);
 		}
-	}
+	}*/
 
 	@Override
 	public void onCreateResources(OnCreateResourcesCallback pOnCreateResourcesCallback)	throws IOException {

@@ -2,8 +2,6 @@ package com.matedevs.protectthetown.manager;
 
 import java.io.IOException;
 
-import org.andengine.audio.music.Music;
-import org.andengine.audio.music.MusicFactory;
 import org.andengine.audio.sound.Sound;
 import org.andengine.audio.sound.SoundFactory;
 import org.andengine.engine.Engine;
@@ -43,7 +41,7 @@ public class ResourcesManager {
 	public Font highScoreFont;
 	
 	//Menu audio
-	public Music menuMusic;
+	//public Music menuMusic;
 	
 	//Menu items
 	public ITextureRegion loading_background_region;
@@ -54,8 +52,8 @@ public class ResourcesManager {
 	public ITextureRegion menu_quit_button_region;
 	public ITextureRegion menu_sound_button_region;
 	public ITextureRegion menu_sound_disabled_button_region;
-	public ITextureRegion menu_music_button_region;
-	public ITextureRegion menu_music_disabled_button_region;
+	//public ITextureRegion menu_music_button_region;
+	//public ITextureRegion menu_music_disabled_button_region;
 	
 	private BuildableBitmapTextureAtlas loadingBackgroundTextureAtlas;
 	private BuildableBitmapTextureAtlas menuTextureAtlas;
@@ -63,7 +61,7 @@ public class ResourcesManager {
 	
 	
 	//Game audio
-	public Music gameMusic;
+	//public Music gameMusic;
 	public Sound explosion;
 	public Sound shield;
 	public Sound shotSound;
@@ -158,8 +156,8 @@ public class ResourcesManager {
 	public ITextureRegion game_twitter_button_region;
 	public ITextureRegion game_sound_button_region;
 	public ITextureRegion game_sound_button_disabled_region;
-	public ITextureRegion game_music_button_region;
-	public ITextureRegion game_music_button_disabled_region;
+	//public ITextureRegion game_music_button_region;
+	//public ITextureRegion game_music_button_disabled_region;
 	
 	//Score tiles
 	public ITiledTextureRegion game_score_tiled_region;
@@ -215,8 +213,8 @@ public class ResourcesManager {
 		menu_quit_button_region = BitmapTextureAtlasTextureRegionFactory.createFromAsset(menuTextureAtlas, activity, "menu_quit_button.png");
 		menu_sound_button_region = BitmapTextureAtlasTextureRegionFactory.createFromAsset(menuTextureAtlas, activity, "menu_sound_button.png");
 		menu_sound_disabled_button_region = BitmapTextureAtlasTextureRegionFactory.createFromAsset(menuTextureAtlas, activity, "menu_sound_button_off.png");;
-		menu_music_button_region = BitmapTextureAtlasTextureRegionFactory.createFromAsset(menuTextureAtlas, activity, "menu_music_button.png");
-		menu_music_disabled_button_region = BitmapTextureAtlasTextureRegionFactory.createFromAsset(menuTextureAtlas, activity, "menu_music_button_off.png");;
+		//menu_music_button_region = BitmapTextureAtlasTextureRegionFactory.createFromAsset(menuTextureAtlas, activity, "menu_music_button.png");
+		//menu_music_disabled_button_region = BitmapTextureAtlasTextureRegionFactory.createFromAsset(menuTextureAtlas, activity, "menu_music_button_off.png");;
 		
 		try {
 			this.menuTextureAtlas.build(new BlackPawnTextureAtlasBuilder<IBitmapTextureAtlasSource, BitmapTextureAtlas>(0, 1, 0));
@@ -238,13 +236,7 @@ public class ResourcesManager {
 	}
 	
 	private void loadMenuAudio() {
-		try {
-			MusicFactory.setAssetBasePath("music/menu/");
-			menuMusic = MusicFactory.createMusicFromAsset(activity.getMusicManager(), activity, "menuMusic.mp3");
-			menuMusic.setLooping(true);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		
 	}
 	
 	private void unloadMenuTextures() {
@@ -257,8 +249,8 @@ public class ResourcesManager {
 	}
 	
 	private void unloadMenuAudio() {
-		menuMusic.stop();
-		activity.getMusicManager().remove(menuMusic);
+		//menuMusic.stop();
+		//activity.getMusicManager().remove(menuMusic);
 		System.gc();
 	}
 	
@@ -349,8 +341,8 @@ public class ResourcesManager {
 		game_twitter_button_region = BitmapTextureAtlasTextureRegionFactory.createFromAsset(gameWindowsTextureAtlas, activity, "game_twitter_button.png");
 		game_sound_button_region = BitmapTextureAtlasTextureRegionFactory.createFromAsset(gameWindowsTextureAtlas, activity, "game_sound_button.png");
 		game_sound_button_disabled_region = BitmapTextureAtlasTextureRegionFactory.createFromAsset(gameWindowsTextureAtlas, activity, "game_sound_button_off.png");
-		game_music_button_region = BitmapTextureAtlasTextureRegionFactory.createFromAsset(gameWindowsTextureAtlas, activity, "game_music_button.png");
-		game_music_button_disabled_region = BitmapTextureAtlasTextureRegionFactory.createFromAsset(gameWindowsTextureAtlas, activity, "game_music_button_off.png");		
+		//game_music_button_region = BitmapTextureAtlasTextureRegionFactory.createFromAsset(gameWindowsTextureAtlas, activity, "game_music_button.png");
+		//game_music_button_disabled_region = BitmapTextureAtlasTextureRegionFactory.createFromAsset(gameWindowsTextureAtlas, activity, "game_music_button_off.png");		
 		
 		game_countdown_frame_1_region = BitmapTextureAtlasTextureRegionFactory.createFromAsset(gameWindowsTextureAtlas, activity, "game_countdown_frame_1.png");
 		game_countdown_frame_2_region = BitmapTextureAtlasTextureRegionFactory.createFromAsset(gameWindowsTextureAtlas, activity, "game_countdown_frame_2.png");
@@ -381,11 +373,11 @@ public class ResourcesManager {
 	}
 
 	private void loadGameAudio() {
-		MusicFactory.setAssetBasePath("music/game/");
+		//MusicFactory.setAssetBasePath("music/game/");
 		SoundFactory.setAssetBasePath("sound/game/");
 		try {
-			gameMusic = MusicFactory.createMusicFromAsset(activity.getMusicManager(), activity, "gameMusic.mp3");
-			gameMusic.setLooping(true);
+			//gameMusic = MusicFactory.createMusicFromAsset(activity.getMusicManager(), activity, "gameMusic.mp3");
+			//gameMusic.setLooping(true);
 			explosion = SoundFactory.createSoundFromAsset(activity.getSoundManager(), activity, "explosion.mp3");
 			shield = SoundFactory.createSoundFromAsset(activity.getSoundManager(), activity, "shield.mp3");
 			shotSound = SoundFactory.createSoundFromAsset(activity.getSoundManager(), activity, "shotSound.mp3");
@@ -396,7 +388,7 @@ public class ResourcesManager {
 	}
 	
 	public void unloadGameAudio() {
-		gameMusic.stop();
+		//gameMusic.stop();
 		
 		explosion.stop();
 		shield.stop();
@@ -408,7 +400,7 @@ public class ResourcesManager {
 		activity.getSoundManager().remove(shotSound);
 		activity.getSoundManager().remove(ufoSound);
 		
-		activity.getMusicManager().remove(gameMusic);
+		//activity.getMusicManager().remove(gameMusic);
 		System.gc();
 	}
 	

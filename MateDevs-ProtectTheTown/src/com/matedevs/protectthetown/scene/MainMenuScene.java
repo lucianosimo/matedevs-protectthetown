@@ -33,7 +33,7 @@ public class MainMenuScene extends BaseScene implements IOnMenuItemClickListener
 	//private int highScore;
 	
 	private Sprite soundDisabled;
-	private Sprite musicDisabled;
+	//private Sprite musicDisabled;
 	
 	private final int MENU_PLAY = 0;
 	private final int MENU_RATEUS = 1;
@@ -55,13 +55,13 @@ public class MainMenuScene extends BaseScene implements IOnMenuItemClickListener
 		}
 		createBackground();
 		createMenuChildScene();
-		resourcesManager.menuMusic.play();
-		resourcesManager.menuMusic.setLooping(true);
+		//resourcesManager.menuMusic.play();
+		//resourcesManager.menuMusic.setLooping(true);
 	}
 
 	@Override
 	public void onBackKeyPressed() {
-		resourcesManager.menuMusic.stop();
+		//resourcesManager.menuMusic.stop();
 		System.exit(0);
 	}
 
@@ -82,12 +82,12 @@ public class MainMenuScene extends BaseScene implements IOnMenuItemClickListener
 	
 	private void createMenuChildScene() {
 		soundDisabled = new Sprite(51, 51, resourcesManager.menu_sound_disabled_button_region, vbom);
-		musicDisabled = new Sprite(51, 51, resourcesManager.menu_music_disabled_button_region, vbom);
+		//musicDisabled = new Sprite(51, 51, resourcesManager.menu_music_disabled_button_region, vbom);
 		
 		//If soundEnabled = 0, enabled..if 1 disabled
 		SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(activity);
 		int soundEnabled = sharedPreferences.getInt("soundEnabled", 0);
-		int musicEnabled = sharedPreferences.getInt("musicEnabled", 0);
+		//int musicEnabled = sharedPreferences.getInt("musicEnabled", 0);
 		if (soundEnabled == 1) {
 			activity.enableSound(false);
 			soundDisabled.setPosition(51, 51);
@@ -95,13 +95,13 @@ public class MainMenuScene extends BaseScene implements IOnMenuItemClickListener
 			activity.enableSound(true);
 			soundDisabled.setPosition(1500, 1500);
 		}
-		if (musicEnabled == 1) {
+		/*if (musicEnabled == 1) {
 			activity.enableMusic(false);
 			musicDisabled.setPosition(51, 51);
 		} else if (musicEnabled == 0) {
 			activity.enableMusic(true);
 			musicDisabled.setPosition(1500, 1500);
-		}
+		}*/
 		
 		menuChildScene = new MenuScene(camera);
 		menuChildScene.setPosition(screenWidth/2, screenHeight/2);
@@ -146,7 +146,7 @@ public class MainMenuScene extends BaseScene implements IOnMenuItemClickListener
 				return true;
 			}
 		};
-		Sprite musicButton = new Sprite(-570, 180, resourcesManager.menu_music_button_region, vbom) {
+		/*Sprite musicButton = new Sprite(-570, 180, resourcesManager.menu_music_button_region, vbom) {
 			@Override
 			public boolean onAreaTouched(TouchEvent pSceneTouchEvent,float pTouchAreaLocalX, float pTouchAreaLocalY) {
 				if (pSceneTouchEvent.isActionDown()) {
@@ -170,15 +170,15 @@ public class MainMenuScene extends BaseScene implements IOnMenuItemClickListener
 				}
 				return true;
 			}
-		};
+		};*/
 		
 		menuChildScene.attachChild(soundButton);
-		menuChildScene.attachChild(musicButton);
+		//menuChildScene.attachChild(musicButton);
 		soundButton.attachChild(soundDisabled);
-		musicButton.attachChild(musicDisabled);
+		//musicButton.attachChild(musicDisabled);
 		
 		menuChildScene.registerTouchArea(soundButton);
-		menuChildScene.registerTouchArea(musicButton);
+		//menuChildScene.registerTouchArea(musicButton);
 		
 		/*menuChildScene.attachChild(play_button_background);
 		menuChildScene.attachChild(rateus_button_background);
@@ -211,11 +211,11 @@ public class MainMenuScene extends BaseScene implements IOnMenuItemClickListener
 	public boolean onMenuItemClicked(MenuScene pMenuScene, IMenuItem pMenuItem,	float pMenuItemLocalX, float pMenuItemLocalY) {
 		switch (pMenuItem.getID()) {
 			case MENU_PLAY:
-				resourcesManager.menuMusic.stop();
+				//resourcesManager.menuMusic.stop();
 				SceneManager.getInstance().loadGameScene(engine, this);
 				return true;
 			case MENU_RATEUS:
-				activity.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + "com.lucianosimo.protectthetown")));
+				activity.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + "com.matedevs.protectthetown")));
 				SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(activity);
 				int rated = sharedPreferences.getInt("rated", 0);
 				Editor editor = sharedPreferences.edit();

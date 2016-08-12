@@ -75,9 +75,9 @@ public class GameScene extends BaseScene{
 	
 	//HUD sprites
 	private Sprite soundDisabled;
-	private Sprite musicDisabled;
+	//private Sprite musicDisabled;
 	private Sprite soundButton;
-	private Sprite musicButton;
+	//private Sprite musicButton;
 	private Sprite gameScore;
 	private TiledSprite[] gameScoreTiles;
 	private TiledSprite[] currentScore;
@@ -283,7 +283,7 @@ public class GameScene extends BaseScene{
 					countdownFrame4.setVisible(true);
 				}
 				if (updates == START_GAME_UPDATES) {
-					resourcesManager.gameMusic.play();
+					//resourcesManager.gameMusic.play();
 					countdownFrame4.setVisible(false);
 					availablePause = true;
 					largeRock1.getLargeRockBody().setActive(true);
@@ -365,17 +365,17 @@ public class GameScene extends BaseScene{
 		//If soundEnabled = 0, enabled..if 1 disabled
 		SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(activity);
 		int soundEnabled = sharedPreferences.getInt("soundEnabled", 0);
-		int musicEnabled = sharedPreferences.getInt("musicEnabled", 0);
+		//int musicEnabled = sharedPreferences.getInt("musicEnabled", 0);
 		if (soundEnabled == 1) {
 			activity.enableSound(false);
 		} else if (soundEnabled == 0) {
 			activity.enableSound(true);
 		}
-		if (musicEnabled == 1) {
+		/*if (musicEnabled == 1) {
 			activity.enableMusic(false);
 		} else if (musicEnabled == 0) {
 			activity.enableMusic(true);
-		}
+		}*/
 	}
 	
 	private void createExplosionsPools() {
@@ -1689,7 +1689,7 @@ public class GameScene extends BaseScene{
 		pauseWindow.setPosition(camera.getCenterX(), camera.getCenterY());
 		
 		soundDisabled = new Sprite(1500, 1500, resourcesManager.game_sound_button_disabled_region, vbom);
-		musicDisabled = new Sprite(1500, 1500, resourcesManager.game_music_button_disabled_region, vbom);
+		//musicDisabled = new Sprite(1500, 1500, resourcesManager.game_music_button_disabled_region, vbom);
 		currentScore = new TiledSprite[6];
 		for (int i = 0; i < currentScore.length; i++) {
 			currentScore[i] = new TiledSprite(140 + i * 60, 260, resourcesManager.game_score_tiled_region.deepCopy(), vbom);
@@ -1699,7 +1699,7 @@ public class GameScene extends BaseScene{
 		//If soundEnabled = 0, enabled..if 1 disabled
 		SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(activity);
 		int soundEnabled = sharedPreferences.getInt("soundEnabled", 0);
-		int musicEnabled = sharedPreferences.getInt("musicEnabled", 0);
+		//int musicEnabled = sharedPreferences.getInt("musicEnabled", 0);
 		if (soundEnabled == 1) {
 			activity.enableSound(false);
 			soundDisabled.setPosition(51, 51);
@@ -1707,13 +1707,13 @@ public class GameScene extends BaseScene{
 			activity.enableSound(true);
 			soundDisabled.setPosition(1500, 1500);
 		}
-		if (musicEnabled == 1) {
+		/*if (musicEnabled == 1) {
 			activity.enableMusic(false);
 			musicDisabled.setPosition(51, 51);
 		} else if (musicEnabled == 0) {
 			activity.enableMusic(true);
 			musicDisabled.setPosition(1500, 1500);
-		}
+		}*/
 		
 		soundButton = new Sprite(-275, 550, resourcesManager.game_sound_button_region, vbom) {
 			@Override
@@ -1740,7 +1740,7 @@ public class GameScene extends BaseScene{
 				return true;
 			}
 		};
-		musicButton = new Sprite(-275, 440, resourcesManager.game_music_button_region, vbom) {
+		/*musicButton = new Sprite(-275, 440, resourcesManager.game_music_button_region, vbom) {
 			@Override
 			public boolean onAreaTouched(TouchEvent pSceneTouchEvent,float pTouchAreaLocalX, float pTouchAreaLocalY) {
 				if (pSceneTouchEvent.isActionDown()) {
@@ -1764,7 +1764,7 @@ public class GameScene extends BaseScene{
 				}
 				return true;
 			}
-		};
+		};*/
 		
 	    retryButton = new Sprite(270, 25, resourcesManager.game_retry_button_region, vbom){
 	    	public boolean onAreaTouched(TouchEvent pSceneTouchEvent, float pTouchAreaLocalX, float pTouchAreaLocalY) {
@@ -1806,7 +1806,7 @@ public class GameScene extends BaseScene{
 	    		    GameScene.this.unregisterTouchArea(retryButton);
 	    		    GameScene.this.unregisterTouchArea(quitButton);
 	    		    GameScene.this.unregisterTouchArea(soundButton);
-	    		    GameScene.this.unregisterTouchArea(musicButton);
+	    		    //GameScene.this.unregisterTouchArea(musicButton);
 	    		    GameScene.this.registerTouchArea(pauseButton);
 	    		}
 	    		return true;
@@ -1816,7 +1816,7 @@ public class GameScene extends BaseScene{
 	    GameScene.this.registerTouchArea(retryButton);
 	    GameScene.this.registerTouchArea(quitButton);
 	    GameScene.this.registerTouchArea(soundButton);
-		GameScene.this.registerTouchArea(musicButton);
+		//GameScene.this.registerTouchArea(musicButton);
 		GameScene.this.unregisterTouchArea(pauseButton);
 	    
 	    //pauseWindow.attachChild(currentScoreText);
@@ -1827,10 +1827,10 @@ public class GameScene extends BaseScene{
 	    pauseWindow.attachChild(retryButton);	    
 	    pauseWindow.attachChild(quitButton);
 	    pauseWindow.attachChild(soundButton);
-	    pauseWindow.attachChild(musicButton);
+	    //pauseWindow.attachChild(musicButton);
 	    
 		soundButton.attachChild(soundDisabled);
-		musicButton.attachChild(musicDisabled);
+		//musicButton.attachChild(musicDisabled);
 		
 		GameScene.this.attachChild(fade);
 		GameScene.this.attachChild(pauseWindow);
