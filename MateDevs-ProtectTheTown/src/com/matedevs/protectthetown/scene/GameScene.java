@@ -38,6 +38,7 @@ import com.badlogic.gdx.physics.box2d.ContactImpulse;
 import com.badlogic.gdx.physics.box2d.ContactListener;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.Manifold;
+import com.google.android.gms.games.Games;
 import com.matedevs.protectthetown.base.BaseScene;
 import com.matedevs.protectthetown.manager.SceneManager;
 import com.matedevs.protectthetown.manager.SceneManager.SceneType;
@@ -62,6 +63,7 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.preference.PreferenceManager;
 import android.util.Log;
+import android.widget.Toast;
 
 public class GameScene extends BaseScene{
 	
@@ -1836,6 +1838,16 @@ public class GameScene extends BaseScene{
 		gameHud.setVisible(false);
 	}
 	
+	private void scoreSubmittedToast() {
+		GameScene.this.activity.runOnUiThread(new Runnable() {
+			
+			@Override
+			public void run() {
+				Toast.makeText(activity, "Score submitted", Toast.LENGTH_SHORT).show();	
+			}
+		});
+	}
+	
 	private void gameOver() {
 		final IEaseFunction[] easeFunction = EASEFUNCTIONS[0];
 
@@ -1850,6 +1862,15 @@ public class GameScene extends BaseScene{
 		
 		loadHighScore();
 		saveHighScore("highScore", score);
+		
+		if (score > previousHighScore) {
+			if (activity.getGoogleApiClient() != null && activity.getGoogleApiClient().isConnected()) {
+				Games.Leaderboards.submitScore(activity.getGoogleApiClient(), activity.getHighestScoreLeaderboardID() , score);
+    			scoreSubmittedToast();
+			} else {
+				activity.getGoogleApiClient().connect();
+			}
+		}
 		
 		if (score <= previousHighScore) {
 			newRecord.setVisible(false);

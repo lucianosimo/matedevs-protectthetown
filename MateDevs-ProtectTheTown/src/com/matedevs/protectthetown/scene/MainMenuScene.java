@@ -224,7 +224,11 @@ public class MainMenuScene extends BaseScene implements IOnMenuItemClickListener
 				editor.commit();
 				return true;
 			case MENU_GLOBAL_SCORES:
-				//activity.showLeaderboard();
+				if (activity.getGoogleApiClient() != null && activity.getGoogleApiClient().isConnected()) {
+					activity.displayLeaderboard();
+				} else {
+					activity.getGoogleApiClient().connect();
+				}
 				return true;
 			case MENU_QUIT:
 				System.exit(0);
