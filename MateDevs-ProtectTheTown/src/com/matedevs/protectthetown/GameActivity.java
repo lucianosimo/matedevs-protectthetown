@@ -176,6 +176,9 @@ public class GameActivity extends BaseGameActivity implements GoogleApiClient.Co
 	}
 	
 	public void displayLeaderboard() {
+		if (!mGoogleApiClient.isConnected()) {
+			mGoogleApiClient.connect();
+		}
 		startActivityForResult(Games.Leaderboards.getLeaderboardIntent(this.getGoogleApiClient(),
 		        this.getHighestScoreLeaderboardID()), RC_LEADERBOARD);
 	}
@@ -206,11 +209,13 @@ public class GameActivity extends BaseGameActivity implements GoogleApiClient.Co
 
 	@Override
 	public void onConnected(Bundle arg0) {
-		
+		// The player is signed in. Hide the sign-in button and allow the
+	    // player to proceed.
 	}
 
 	@Override
-	public void onConnectionSuspended(int arg0) {
-		
+	public void onConnectionSuspended(int i) {
+	    // Attempt to reconnect
+	    mGoogleApiClient.connect();
 	}
 }

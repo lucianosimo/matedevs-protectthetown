@@ -1864,6 +1864,9 @@ public class GameScene extends BaseScene{
 		saveHighScore("highScore", score);
 		
 		if (score > previousHighScore) {
+			if (!activity.getGoogleApiClient().isConnected()) {
+				activity.getGoogleApiClient().connect();
+			}
 			if (activity.getGoogleApiClient() != null && activity.getGoogleApiClient().isConnected()) {
 				Games.Leaderboards.submitScore(activity.getGoogleApiClient(), activity.getHighestScoreLeaderboardID() , score);
     			scoreSubmittedToast();
