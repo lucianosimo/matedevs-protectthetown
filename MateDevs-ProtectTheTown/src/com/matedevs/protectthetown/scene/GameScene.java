@@ -38,6 +38,9 @@ import com.badlogic.gdx.physics.box2d.ContactImpulse;
 import com.badlogic.gdx.physics.box2d.ContactListener;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.Manifold;
+import com.chartboost.sdk.CBLocation;
+import com.chartboost.sdk.Chartboost;
+import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.games.Games;
 import com.matedevs.protectthetown.base.BaseScene;
 import com.matedevs.protectthetown.manager.SceneManager;
@@ -244,6 +247,8 @@ public class GameScene extends BaseScene{
 		checkSoundStatus();
 		createExplosionsPools();
 		
+		loadAds();
+		
 		engine.registerUpdateHandler(new IUpdateHandler() {
 			private int updates = 0;
 			private int difficulty = 0;
@@ -361,21 +366,37 @@ public class GameScene extends BaseScene{
 		});
 	}
 	
+	private void loadAds() {
+
+		if (!Chartboost.hasInterstitial(CBLocation.LOCATION_GAMEOVER)) {
+			Chartboost.cacheInterstitial(CBLocation.LOCATION_GAMEOVER);
+		}
+		
+		if (!activity.getAdmobInterstitialAd().isLoaded()) {
+			activity.runOnUiThread(new Runnable() {
+				
+				@Override
+				public void run() {
+					AdRequest adRequest = new AdRequest.Builder()
+			                  .build();
+					
+					activity.getAdmobInterstitialAd().loadAd(adRequest);
+				}
+			});
+			
+		}
+	}
+	
 	private void checkSoundStatus() {
 		//If soundEnabled = 0, enabled..if 1 disabled
 		SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(activity);
 		int soundEnabled = sharedPreferences.getInt("soundEnabled", 0);
-		//int musicEnabled = sharedPreferences.getInt("musicEnabled", 0);
+		
 		if (soundEnabled == 1) {
 			activity.enableSound(false);
 		} else if (soundEnabled == 0) {
 			activity.enableSound(true);
 		}
-		/*if (musicEnabled == 1) {
-			activity.enableMusic(false);
-		} else if (musicEnabled == 0) {
-			activity.enableMusic(true);
-		}*/
 	}
 	
 	private void createExplosionsPools() {
@@ -1689,7 +1710,6 @@ public class GameScene extends BaseScene{
 		pauseWindow.setPosition(camera.getCenterX(), camera.getCenterY());
 		
 		soundDisabled = new Sprite(1500, 1500, resourcesManager.game_sound_button_disabled_region, vbom);
-		//musicDisabled = new Sprite(1500, 1500, resourcesManager.game_music_button_disabled_region, vbom);
 		currentScore = new TiledSprite[6];
 		for (int i = 0; i < currentScore.length; i++) {
 			currentScore[i] = new TiledSprite(140 + i * 60, 260, resourcesManager.game_score_tiled_region.deepCopy(), vbom);
@@ -1699,7 +1719,6 @@ public class GameScene extends BaseScene{
 		//If soundEnabled = 0, enabled..if 1 disabled
 		SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(activity);
 		int soundEnabled = sharedPreferences.getInt("soundEnabled", 0);
-		//int musicEnabled = sharedPreferences.getInt("musicEnabled", 0);
 		if (soundEnabled == 1) {
 			activity.enableSound(false);
 			soundDisabled.setPosition(51, 51);
@@ -1707,13 +1726,6 @@ public class GameScene extends BaseScene{
 			activity.enableSound(true);
 			soundDisabled.setPosition(1500, 1500);
 		}
-		/*if (musicEnabled == 1) {
-			activity.enableMusic(false);
-			musicDisabled.setPosition(51, 51);
-		} else if (musicEnabled == 0) {
-			activity.enableMusic(true);
-			musicDisabled.setPosition(1500, 1500);
-		}*/
 		
 		soundButton = new Sprite(-275, 550, resourcesManager.game_sound_button_region, vbom) {
 			@Override
@@ -1740,31 +1752,6 @@ public class GameScene extends BaseScene{
 				return true;
 			}
 		};
-		/*musicButton = new Sprite(-275, 440, resourcesManager.game_music_button_region, vbom) {
-			@Override
-			public boolean onAreaTouched(TouchEvent pSceneTouchEvent,float pTouchAreaLocalX, float pTouchAreaLocalY) {
-				if (pSceneTouchEvent.isActionDown()) {
-					Log.i("protect", "musicButton touched");
-					//If musicEnabled = 0, enabled..if 1 disabled
-					SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(activity);
-					int musicEnabled = sharedPreferences.getInt("musicEnabled", 0);
-					Log.i("protect", "musicEnabled " + musicEnabled);
-					Editor editor = sharedPreferences.edit();
-					if (musicEnabled == 1) {
-						musicEnabled = 0;
-						musicDisabled.setPosition(1500, 1500);
-						activity.enableMusic(true);
-					} else if (musicEnabled == 0) {
-						musicEnabled = 1;
-						musicDisabled.setPosition(51, 51);
-						activity.enableMusic(false);
-					}
-					editor.putInt("musicEnabled", musicEnabled);
-					editor.commit();
-				}
-				return true;
-			}
-		};*/
 		
 	    retryButton = new Sprite(270, 25, resourcesManager.game_retry_button_region, vbom){
 	    	public boolean onAreaTouched(TouchEvent pSceneTouchEvent, float pTouchAreaLocalX, float pTouchAreaLocalY) {
@@ -1806,7 +1793,6 @@ public class GameScene extends BaseScene{
 	    		    GameScene.this.unregisterTouchArea(retryButton);
 	    		    GameScene.this.unregisterTouchArea(quitButton);
 	    		    GameScene.this.unregisterTouchArea(soundButton);
-	    		    //GameScene.this.unregisterTouchArea(musicButton);
 	    		    GameScene.this.registerTouchArea(pauseButton);
 	    		}
 	    		return true;
@@ -1816,10 +1802,8 @@ public class GameScene extends BaseScene{
 	    GameScene.this.registerTouchArea(retryButton);
 	    GameScene.this.registerTouchArea(quitButton);
 	    GameScene.this.registerTouchArea(soundButton);
-		//GameScene.this.registerTouchArea(musicButton);
 		GameScene.this.unregisterTouchArea(pauseButton);
 	    
-	    //pauseWindow.attachChild(currentScoreText);
 		for (int i = 0; i < currentScore.length; i++) {
 			pauseWindow.attachChild(currentScore[i]);
 		}
@@ -1827,10 +1811,8 @@ public class GameScene extends BaseScene{
 	    pauseWindow.attachChild(retryButton);	    
 	    pauseWindow.attachChild(quitButton);
 	    pauseWindow.attachChild(soundButton);
-	    //pauseWindow.attachChild(musicButton);
 	    
 		soundButton.attachChild(soundDisabled);
-		//musicButton.attachChild(musicDisabled);
 		
 		GameScene.this.attachChild(fade);
 		GameScene.this.attachChild(pauseWindow);
@@ -1951,8 +1933,27 @@ public class GameScene extends BaseScene{
 		gameOverWindow.attachChild(newRecord);
 		gameOverWindow.attachChild(twitterButton);
 		
-		//GameScene.this.setIgnoreUpdate(true);
+		showAds();
+	}
+	
+	private void showAds() {
+		if (Chartboost.hasInterstitial(CBLocation.LOCATION_GAMEOVER)) {
+			Log.d("ptt", "Chartboost");
+			Chartboost.showInterstitial(CBLocation.LOCATION_GAMEOVER);
+		} else if (activity.getAdmobInterstitialAd().isLoaded()) {
+			activity.runOnUiThread(new Runnable() {
+
+				@Override
+				public void run() {
+					Log.d("ptt", "Admob");
+					activity.getAdmobInterstitialAd().show();
+				}
 				
+			});
+			
+		} else {
+			Log.d("ptt", "Not loaded");
+		}
 	}
 	
 	private void createExplosion(float x, float y) {
