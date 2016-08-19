@@ -34,6 +34,9 @@ public class GameActivity extends BaseGameActivity implements GoogleApiClient.Co
 
 	private BoundCamera camera;
 	public static float mGravityX = 0;
+	
+	private View decorView;
+	private int flags;
 
 	private GoogleApiClient mGoogleApiClient;
 	private InterstitialAd mInterstitialAd;
@@ -71,8 +74,27 @@ public class GameActivity extends BaseGameActivity implements GoogleApiClient.Co
 	    mInterstitialAd = new InterstitialAd(this);
         mInterstitialAd.setAdUnitId(ADMOB_AD_UNIT_ID);
         
-        getWindow().getDecorView()
-        .setSystemUiVisibility(View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);
+        /*getWindow().getDecorView()
+        .setSystemUiVisibility(View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);*/
+        
+        decorView = getWindow().getDecorView();
+        flags = View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                | View.SYSTEM_UI_FLAG_FULLSCREEN
+                | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY;
+        
+        decorView.setSystemUiVisibility(flags);
+	}
+	
+	@Override
+	public synchronized void onWindowFocusChanged(boolean pHasWindowFocus) {
+		super.onWindowFocusChanged(pHasWindowFocus);
+		if (pHasWindowFocus) {
+			decorView.setSystemUiVisibility(flags);
+		}
+		
 	}
 
 	@Override
