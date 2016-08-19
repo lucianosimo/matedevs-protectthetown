@@ -60,7 +60,7 @@ public class Rock extends Sprite{
 				body.setAngularVelocity(omega);
 			}
 		});
-		this.registerEntityModifier(new LoopEntityModifier(new RotationModifier(5, savedRotation, savedRotation - omega * 180)) {
+		this.registerEntityModifier(new LoopEntityModifier(new RotationModifier(5, savedRotation, savedRotation + omega * 180)) {
 			@Override
 			protected void onModifierFinished(IEntity pItem) {
 				super.onModifierFinished(pItem);

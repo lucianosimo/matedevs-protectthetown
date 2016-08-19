@@ -28,6 +28,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.view.KeyEvent;
+import android.view.View;
 
 public class GameActivity extends BaseGameActivity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
 
@@ -46,7 +47,7 @@ public class GameActivity extends BaseGameActivity implements GoogleApiClient.Co
 	private final static String CHARTBOOST_APP_ID = "57b60d6df6cd4543a0574eb6";
 	private final static String CHARTBOOST_APP_SIGNATURE = "3d704573a17ec274ab47b1e0de2b5f0a9cdae052";
 	
-	private final static String ADMOB_APP_ID = "ca-app-pub-7393689937893463~9946254636";
+	//private final static String ADMOB_APP_ID = "ca-app-pub-7393689937893463~9946254636";
 	private final static String ADMOB_AD_UNIT_ID = "ca-app-pub-7393689937893463/2422987831";
 
 	private boolean mResolvingConnectionFailure = false;
@@ -57,13 +58,21 @@ public class GameActivity extends BaseGameActivity implements GoogleApiClient.Co
 	@Override
 	protected void onCreate(Bundle pSavedInstanceState) {
 		super.onCreate(pSavedInstanceState);
+		
 		mGoogleApiClient = new GoogleApiClient.Builder(this)
 	            .addConnectionCallbacks(this)
 	            .addOnConnectionFailedListener(this)
 	            .addApi(Games.API).addScope(Games.SCOPE_GAMES)
 	            .build();
+		
 		Chartboost.startWithAppId(this, CHARTBOOST_APP_ID, CHARTBOOST_APP_SIGNATURE);
 	    Chartboost.onCreate(this);
+	    
+	    mInterstitialAd = new InterstitialAd(this);
+        mInterstitialAd.setAdUnitId(ADMOB_AD_UNIT_ID);
+        
+        getWindow().getDecorView()
+        .setSystemUiVisibility(View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);
 	}
 
 	@Override
@@ -81,6 +90,7 @@ public class GameActivity extends BaseGameActivity implements GoogleApiClient.Co
 	protected void onPause() {
 		super.onPause();
 		Chartboost.onPause(this);
+		SceneManager.getInstance().getCurrentScene().handleOnPause();
 		mEngine.getSoundManager().setMasterVolume(0);
 	}
 	
@@ -182,9 +192,6 @@ public class GameActivity extends BaseGameActivity implements GoogleApiClient.Co
 	}
 	
 	public InterstitialAd getAdmobInterstitialAd() {
-		mInterstitialAd = new InterstitialAd(this);
-        mInterstitialAd.setAdUnitId(ADMOB_AD_UNIT_ID);
-        
 		return mInterstitialAd;
 	}
 	

@@ -78,9 +78,7 @@ public class GameScene extends BaseScene{
 	
 	//HUD sprites
 	private Sprite soundDisabled;
-	//private Sprite musicDisabled;
 	private Sprite soundButton;
-	//private Sprite musicButton;
 	private Sprite gameScore;
 	private TiledSprite[] gameScoreTiles;
 	private TiledSprite[] currentScore;
@@ -117,7 +115,7 @@ public class GameScene extends BaseScene{
 	private Sprite retryButton;
 	private Sprite quitButton;
 	private Sprite pauseButton;
-	private Sprite submitScoreButton;
+	//private Sprite submitScoreButton;
 	private Sprite twitterButton;
 	
 	//Dome
@@ -145,7 +143,6 @@ public class GameScene extends BaseScene{
 	
 	private ArrayList<Rock> rockList;
 	private ArrayList<SmallRock> smallRockList;
-	//private LargeRock largeRock4;
 	
 	//Satelite
 	private Satelite satelite;
@@ -288,7 +285,6 @@ public class GameScene extends BaseScene{
 					countdownFrame4.setVisible(true);
 				}
 				if (updates == START_GAME_UPDATES) {
-					//resourcesManager.gameMusic.play();
 					countdownFrame4.setVisible(false);
 					availablePause = true;
 					largeRock1.getLargeRockBody().setActive(true);
@@ -372,19 +368,19 @@ public class GameScene extends BaseScene{
 			Chartboost.cacheInterstitial(CBLocation.LOCATION_GAMEOVER);
 		}
 		
-		if (!activity.getAdmobInterstitialAd().isLoaded()) {
-			activity.runOnUiThread(new Runnable() {
-				
-				@Override
-				public void run() {
+		activity.runOnUiThread(new Runnable() {
+			
+			@Override
+			public void run() {
+				if (!activity.getAdmobInterstitialAd().isLoaded()) {
 					AdRequest adRequest = new AdRequest.Builder()
 			                  .build();
 					
 					activity.getAdmobInterstitialAd().loadAd(adRequest);
 				}
-			});
-			
-		}
+				
+			}
+		});
 	}
 	
 	private void checkSoundStatus() {
@@ -744,6 +740,9 @@ public class GameScene extends BaseScene{
 							}						
 						}
 					});
+					
+					setTouchAreaBindingOnActionDownEnabled(false);
+					setTouchAreaBindingOnActionMoveEnabled(false);
 				}				
 				return true;
 			}
@@ -813,6 +812,9 @@ public class GameScene extends BaseScene{
 							
 						}
 					});
+					
+					setTouchAreaBindingOnActionDownEnabled(false);
+					setTouchAreaBindingOnActionMoveEnabled(false);
 				}
 				
 				return true;
@@ -1515,6 +1517,9 @@ public class GameScene extends BaseScene{
 	    				}
 	    			});
 	    			
+	    			setTouchAreaBindingOnActionDownEnabled(false);
+					setTouchAreaBindingOnActionMoveEnabled(false);
+	    			
         		}
         		return true;
         	};
@@ -1644,6 +1649,10 @@ public class GameScene extends BaseScene{
 				if (availablePause) {
 					displayPauseWindow();
 				}
+				
+				setTouchAreaBindingOnActionDownEnabled(false);
+				setTouchAreaBindingOnActionMoveEnabled(false);
+				
 				return true;
 			}
 		};
@@ -1748,6 +1757,9 @@ public class GameScene extends BaseScene{
 					}
 					editor.putInt("soundEnabled", soundEnabled);
 					editor.commit();	
+					
+					setTouchAreaBindingOnActionDownEnabled(false);
+					setTouchAreaBindingOnActionMoveEnabled(false);
 				}
 				return true;
 			}
@@ -1794,6 +1806,9 @@ public class GameScene extends BaseScene{
 	    		    GameScene.this.unregisterTouchArea(quitButton);
 	    		    GameScene.this.unregisterTouchArea(soundButton);
 	    		    GameScene.this.registerTouchArea(pauseButton);
+	    		    
+	    		    setTouchAreaBindingOnActionDownEnabled(false);
+					setTouchAreaBindingOnActionMoveEnabled(false);
 	    		}
 	    		return true;
 	    	};
@@ -1870,42 +1885,51 @@ public class GameScene extends BaseScene{
 		gameOverWindow.registerEntityModifier(new MoveModifier(HELP_WINDOW_MOVE_MODIFIER_DURATION_MILISECONDS, screenWidth/2, 
 				1200, screenWidth/2, screenHeight/2, easeFunction[0]));
 		
-		retryButton = new Sprite(550, 25, resourcesManager.game_retry_button_region, vbom){
+		retryButton = new Sprite(425, 25, resourcesManager.game_retry_button_region, vbom){
 	    	public boolean onAreaTouched(TouchEvent pSceneTouchEvent, float pTouchAreaLocalX, float pTouchAreaLocalY) {
 	    		if (pSceneTouchEvent.isActionDown()) {
+	    			setTouchAreaBindingOnActionDownEnabled(false);
+					setTouchAreaBindingOnActionMoveEnabled(false);
+					
 	    			gameHud.dispose();
 					gameHud.setVisible(false);
 					detachChild(gameHud);
 					myGarbageCollection();
 					SceneManager.getInstance().loadGameScene(engine, GameScene.this);
 				}
-	    		return true;
+	    		return false;
 	    	};
 	    };
-	    submitScoreButton = new Sprite(270, 25, resourcesManager.game_submit_button_region, vbom){
+	    /*submitScoreButton = new Sprite(270, 25, resourcesManager.game_submit_button_region, vbom){
 	    	public boolean onAreaTouched(TouchEvent pSceneTouchEvent, float pTouchAreaLocalX, float pTouchAreaLocalY) {
 	    		if (pSceneTouchEvent.isActionDown()) {
 	    			//activity.submitScore(score);
 	    		}
 	    		return true;
 	    	};
-	    };
+	    };*/
 
-	    quitButton = new Sprite(0, 25, resourcesManager.game_quit_button_region, vbom){
+	    quitButton = new Sprite(150, 25, resourcesManager.game_quit_button_region, vbom){
 	    	public boolean onAreaTouched(TouchEvent pSceneTouchEvent, float pTouchAreaLocalX, float pTouchAreaLocalY) {
 	    		if (pSceneTouchEvent.isActionDown()) {
+	    			setTouchAreaBindingOnActionDownEnabled(false);
+					setTouchAreaBindingOnActionMoveEnabled(false);
+					
 	    			gameHud.dispose();
 					gameHud.setVisible(false);
 					detachChild(gameHud);
 					myGarbageCollection();
 					SceneManager.getInstance().loadMenuScene(engine, GameScene.this);
 	    		}
-	    		return true;
+	    		return false;
 	    	};
 	    };
 	    twitterButton = new Sprite(450, 190, resourcesManager.game_twitter_button_region, vbom) {
 	    	public boolean onAreaTouched(TouchEvent pSceneTouchEvent, float pTouchAreaLocalX, float pTouchAreaLocalY) {
 	    		if (pSceneTouchEvent.isActionDown()) {
+	    			setTouchAreaBindingOnActionDownEnabled(false);
+					setTouchAreaBindingOnActionMoveEnabled(false);
+					
 	    			Intent shareIntent = new Intent();
 	    		    shareIntent.setAction(Intent.ACTION_SEND);
 	    		    shareIntent.setType("text/plain");
@@ -1913,7 +1937,7 @@ public class GameScene extends BaseScene{
 	    		    shareIntent.putExtra(Intent.EXTRA_TEXT, "My score in #ProtectTheTown is " + score + " points. And yours?");
 	    		    activity.tweetScore(shareIntent);
 	    		}
-	    		return true;
+	    		return false;
 	    	}
 	    };
 		
@@ -1921,14 +1945,14 @@ public class GameScene extends BaseScene{
 		GameScene.this.attachChild(fade);
 		GameScene.this.attachChild(gameOverWindow);
 		GameScene.this.registerTouchArea(retryButton);
-		GameScene.this.registerTouchArea(submitScoreButton);
+		//GameScene.this.registerTouchArea(submitScoreButton);
 	    GameScene.this.registerTouchArea(quitButton);
 	    GameScene.this.registerTouchArea(twitterButton);
 	    for (int i = 0; i < finalScore.length; i++) {
 			gameOverWindow.attachChild(finalScore[i]);
 		}
 		gameOverWindow.attachChild(retryButton);
-		gameOverWindow.attachChild(submitScoreButton);
+		//gameOverWindow.attachChild(submitScoreButton);
 		gameOverWindow.attachChild(quitButton);
 		gameOverWindow.attachChild(newRecord);
 		gameOverWindow.attachChild(twitterButton);
@@ -1940,19 +1964,21 @@ public class GameScene extends BaseScene{
 		if (Chartboost.hasInterstitial(CBLocation.LOCATION_GAMEOVER)) {
 			Log.d("ptt", "Chartboost");
 			Chartboost.showInterstitial(CBLocation.LOCATION_GAMEOVER);
-		} else if (activity.getAdmobInterstitialAd().isLoaded()) {
+		} else {
 			activity.runOnUiThread(new Runnable() {
 
 				@Override
 				public void run() {
-					Log.d("ptt", "Admob");
-					activity.getAdmobInterstitialAd().show();
+					if (activity.getAdmobInterstitialAd().isLoaded()) {
+						Log.d("ptt", "Admob");
+						activity.getAdmobInterstitialAd().show();
+					} else {
+						Log.d("ptt", "Not Loaded");
+					}
 				}
 				
 			});
 			
-		} else {
-			Log.d("ptt", "Not loaded");
 		}
 	}
 	
@@ -2057,6 +2083,9 @@ public class GameScene extends BaseScene{
 							}
 						}
 					});
+					
+					setTouchAreaBindingOnActionDownEnabled(false);
+					setTouchAreaBindingOnActionMoveEnabled(false);
 				}
 				
 				return true;
@@ -2096,6 +2125,9 @@ public class GameScene extends BaseScene{
 							}
 						}
 					});
+					
+					setTouchAreaBindingOnActionDownEnabled(false);
+					setTouchAreaBindingOnActionMoveEnabled(false);
 				}
 				
 				return true;
@@ -2150,6 +2182,9 @@ public class GameScene extends BaseScene{
 							}
 						}
 					});
+					
+					setTouchAreaBindingOnActionDownEnabled(false);
+					setTouchAreaBindingOnActionMoveEnabled(false);
 				}
 				
 				return true;
