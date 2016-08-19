@@ -4,7 +4,6 @@ import java.util.Random;
 
 import org.andengine.engine.camera.Camera;
 import org.andengine.entity.IEntity;
-import org.andengine.entity.modifier.LoopEntityModifier;
 import org.andengine.entity.modifier.RotationModifier;
 import org.andengine.entity.sprite.Sprite;
 import org.andengine.extension.physics.box2d.PhysicsConnector;
@@ -24,6 +23,7 @@ public class LargeRock extends Sprite{
 	private Body body;
 	private FixtureDef fixture;
 	private float savedRotation = 0;
+	private float omega;
 	
 	public LargeRock(float pX, float pY, VertexBufferObjectManager vbom, Camera camera, PhysicsWorld physicsWorld) {
 		super(pX, pY, ResourcesManager.getInstance().game_large_rock_region.deepCopy(), vbom);
@@ -33,8 +33,8 @@ public class LargeRock extends Sprite{
 	private void createPhysics(final Camera camera, PhysicsWorld physicsWorld) {
 		//n = rand.nextInt(max - min + 1) + min;
 		Random rand = new Random();
-		final int random = rand.nextInt(2) + 1;
-		final float omega = random;
+		omega = rand.nextInt(2) + 1;
+				
 		final float width = 160 / PhysicsConstants.PIXEL_TO_METER_RATIO_DEFAULT;
 		final float height = 166 / PhysicsConstants.PIXEL_TO_METER_RATIO_DEFAULT;
 		final Vector2[] v = {
@@ -61,11 +61,16 @@ public class LargeRock extends Sprite{
 				body.setAngularVelocity(omega);
 			}
 		});
-		this.registerEntityModifier(new LoopEntityModifier(new RotationModifier(5, savedRotation, savedRotation + omega * 180)) {
+		rotateRock();
+	}
+	
+	private void rotateRock() {
+		this.registerEntityModifier(new RotationModifier(5, savedRotation, savedRotation + omega * 180) {
 			@Override
 			protected void onModifierFinished(IEntity pItem) {
 				super.onModifierFinished(pItem);
 				savedRotation = LargeRock.this.getRotation();
+				rotateRock();
 			}
 		});
 	}
