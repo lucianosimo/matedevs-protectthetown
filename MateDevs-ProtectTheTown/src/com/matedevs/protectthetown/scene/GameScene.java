@@ -1900,15 +1900,6 @@ public class GameScene extends BaseScene{
 	    		return false;
 	    	};
 	    };
-	    /*submitScoreButton = new Sprite(270, 25, resourcesManager.game_submit_button_region, vbom){
-	    	public boolean onAreaTouched(TouchEvent pSceneTouchEvent, float pTouchAreaLocalX, float pTouchAreaLocalY) {
-	    		if (pSceneTouchEvent.isActionDown()) {
-	    			//activity.submitScore(score);
-	    		}
-	    		return true;
-	    	};
-	    };*/
-
 	    quitButton = new Sprite(150, 25, resourcesManager.game_quit_button_region, vbom){
 	    	public boolean onAreaTouched(TouchEvent pSceneTouchEvent, float pTouchAreaLocalX, float pTouchAreaLocalY) {
 	    		if (pSceneTouchEvent.isActionDown()) {
@@ -1945,14 +1936,12 @@ public class GameScene extends BaseScene{
 		GameScene.this.attachChild(fade);
 		GameScene.this.attachChild(gameOverWindow);
 		GameScene.this.registerTouchArea(retryButton);
-		//GameScene.this.registerTouchArea(submitScoreButton);
 	    GameScene.this.registerTouchArea(quitButton);
 	    GameScene.this.registerTouchArea(twitterButton);
 	    for (int i = 0; i < finalScore.length; i++) {
 			gameOverWindow.attachChild(finalScore[i]);
 		}
 		gameOverWindow.attachChild(retryButton);
-		//gameOverWindow.attachChild(submitScoreButton);
 		gameOverWindow.attachChild(quitButton);
 		gameOverWindow.attachChild(newRecord);
 		gameOverWindow.attachChild(twitterButton);
@@ -1961,7 +1950,9 @@ public class GameScene extends BaseScene{
 	}
 	
 	private void showAds() {
-		if (Chartboost.hasInterstitial(CBLocation.LOCATION_GAMEOVER)) {
+		if (activity.isAvailableUnityAds()) {
+			activity.showUnityAds();
+		} else if (Chartboost.hasInterstitial(CBLocation.LOCATION_GAMEOVER)) {
 			Log.d("ptt", "Chartboost");
 			Chartboost.showInterstitial(CBLocation.LOCATION_GAMEOVER);
 		} else {

@@ -22,11 +22,15 @@ import com.google.android.gms.games.Games;
 import com.google.example.games.basegameutils.BaseGameUtils;
 import com.matedevs.protectthetown.manager.ResourcesManager;
 import com.matedevs.protectthetown.manager.SceneManager;
+import com.unity3d.ads.android.IUnityAdsListener;
+import com.unity3d.ads.android.UnityAds;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 
@@ -52,6 +56,8 @@ public class GameActivity extends BaseGameActivity implements GoogleApiClient.Co
 	
 	//private final static String ADMOB_APP_ID = "ca-app-pub-7393689937893463~9946254636";
 	private final static String ADMOB_AD_UNIT_ID = "ca-app-pub-7393689937893463/2422987831";
+	
+	private final static String UNITY_ADS_GAME_ID = "1118513";
 
 	private boolean mResolvingConnectionFailure = false;
 	private boolean mAutoStartSignInFlow = true;
@@ -68,14 +74,7 @@ public class GameActivity extends BaseGameActivity implements GoogleApiClient.Co
 	            .addApi(Games.API).addScope(Games.SCOPE_GAMES)
 	            .build();
 		
-		Chartboost.startWithAppId(this, CHARTBOOST_APP_ID, CHARTBOOST_APP_SIGNATURE);
-	    Chartboost.onCreate(this);
-	    
-	    mInterstitialAd = new InterstitialAd(this);
-        mInterstitialAd.setAdUnitId(ADMOB_AD_UNIT_ID);
-        
-        /*getWindow().getDecorView()
-        .setSystemUiVisibility(View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);*/
+		initializeAdsServices();
         
         decorView = getWindow().getDecorView();
         flags = View.SYSTEM_UI_FLAG_LAYOUT_STABLE
@@ -86,6 +85,82 @@ public class GameActivity extends BaseGameActivity implements GoogleApiClient.Co
                 | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY;
         
         decorView.setSystemUiVisibility(flags);
+	}
+	
+	private void initializeAdsServices() {
+		Chartboost.startWithAppId(this, CHARTBOOST_APP_ID, CHARTBOOST_APP_SIGNATURE);
+	    Chartboost.onCreate(this);
+	    
+	    mInterstitialAd = new InterstitialAd(this);
+        mInterstitialAd.setAdUnitId(ADMOB_AD_UNIT_ID);
+        
+        /*
+         * BORRAR!!!!!!!!!!!!!!!!!!
+         */
+        UnityAds.setDebugMode(true);
+        UnityAds.setTestMode(true);
+        /*
+         * BORRAR!!!!!!!!!!!!!!!!!!
+         */
+        
+        UnityAds.init((Activity)this, UNITY_ADS_GAME_ID, new IUnityAdsListener() {
+			
+			@Override
+			public void onVideoStarted() {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void onVideoCompleted(String arg0, boolean arg1) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void onShow() {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void onHide() {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void onFetchFailed() {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void onFetchCompleted() {
+				// TODO Auto-generated method stub
+				
+			}
+		});
+        UnityAds.changeActivity((Activity)this);
+	}
+	
+	public boolean isAvailableUnityAds() {
+		//Log.d("ptt","setZone: " + UnityAds.setZone("video"));
+		//Log.d("ptt","Can show ad: " + UnityAds.canShow());
+		//Log.d("ptt","Can show ads: " + UnityAds.canShowAds());
+		//Log.d("ptt","Is supported: " + UnityAds.isSupported());
+		
+		if (UnityAds.canShow()) {
+			Log.d("ptt","unity");
+		    return true;
+		} else {
+			Log.d("ptt","not unity");
+			return false;
+		}
+	}
+	
+	public void showUnityAds() {
+		UnityAds.show();
 	}
 	
 	@Override
@@ -123,6 +198,7 @@ public class GameActivity extends BaseGameActivity implements GoogleApiClient.Co
 		int soundEnabled = sharedPreferences.getInt("soundEnabled", 0);
 		
 		Chartboost.onResume(this);
+		UnityAds.changeActivity(this);
 		
 		if (soundEnabled == 1) {
 			enableSound(false);
