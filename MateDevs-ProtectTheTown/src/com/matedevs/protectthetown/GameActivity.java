@@ -30,7 +30,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 
@@ -145,16 +144,9 @@ public class GameActivity extends BaseGameActivity implements GoogleApiClient.Co
 	}
 	
 	public boolean isAvailableUnityAds() {
-		//Log.d("ptt","setZone: " + UnityAds.setZone("video"));
-		//Log.d("ptt","Can show ad: " + UnityAds.canShow());
-		//Log.d("ptt","Can show ads: " + UnityAds.canShowAds());
-		//Log.d("ptt","Is supported: " + UnityAds.isSupported());
-		
 		if (UnityAds.canShow()) {
-			Log.d("ptt","unity");
 		    return true;
 		} else {
-			Log.d("ptt","not unity");
 			return false;
 		}
 	}

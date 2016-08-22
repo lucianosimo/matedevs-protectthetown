@@ -1950,10 +1950,18 @@ public class GameScene extends BaseScene{
 	}
 	
 	private void showAds() {
-		if (activity.isAvailableUnityAds()) {
+		SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(activity);
+		Editor editor = sharedPreferences.edit();
+		
+		int playedInSameSession = sharedPreferences.getInt("playedInSameSession", 0);
+		playedInSameSession++;
+		
+		editor.putInt("playedInSameSession", playedInSameSession);
+		editor.commit();
+		
+		if (playedInSameSession % 5 == 0 && activity.isAvailableUnityAds()) {
 			activity.showUnityAds();
 		} else if (Chartboost.hasInterstitial(CBLocation.LOCATION_GAMEOVER)) {
-			Log.d("ptt", "Chartboost");
 			Chartboost.showInterstitial(CBLocation.LOCATION_GAMEOVER);
 		} else {
 			activity.runOnUiThread(new Runnable() {
@@ -1961,10 +1969,7 @@ public class GameScene extends BaseScene{
 				@Override
 				public void run() {
 					if (activity.getAdmobInterstitialAd().isLoaded()) {
-						Log.d("ptt", "Admob");
 						activity.getAdmobInterstitialAd().show();
-					} else {
-						Log.d("ptt", "Not Loaded");
 					}
 				}
 				

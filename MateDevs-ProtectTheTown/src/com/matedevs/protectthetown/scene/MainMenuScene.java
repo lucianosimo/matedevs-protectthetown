@@ -244,11 +244,6 @@ public class MainMenuScene extends BaseScene implements IOnMenuItemClickListener
 		
 	}
 	
-	/*private void loadHighScore() {
-		SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(activity);
-		highScore = sharedPreferences.getInt("highScore", 0);
-	}*/
-	
 	private void displayRateUsWindow() {
 		MainMenuScene.this.activity.runOnUiThread(new Runnable() {
 			
