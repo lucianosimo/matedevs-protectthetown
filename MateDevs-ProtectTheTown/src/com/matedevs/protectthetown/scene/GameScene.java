@@ -1813,11 +1813,6 @@ public class GameScene extends BaseScene{
 	    		return true;
 	    	};
 	    };
-	    GameScene.this.registerTouchArea(resumeButton);
-	    GameScene.this.registerTouchArea(retryButton);
-	    GameScene.this.registerTouchArea(quitButton);
-	    GameScene.this.registerTouchArea(soundButton);
-		GameScene.this.unregisterTouchArea(pauseButton);
 	    
 		for (int i = 0; i < currentScore.length; i++) {
 			pauseWindow.attachChild(currentScore[i]);
@@ -1826,6 +1821,12 @@ public class GameScene extends BaseScene{
 	    pauseWindow.attachChild(retryButton);	    
 	    pauseWindow.attachChild(quitButton);
 	    pauseWindow.attachChild(soundButton);
+	    
+	    GameScene.this.registerTouchArea(resumeButton);
+	    GameScene.this.registerTouchArea(retryButton);
+	    GameScene.this.registerTouchArea(quitButton);
+	    GameScene.this.registerTouchArea(soundButton);
+		GameScene.this.unregisterTouchArea(pauseButton);
 	    
 		soundButton.attachChild(soundDisabled);
 		
@@ -1897,7 +1898,7 @@ public class GameScene extends BaseScene{
 					myGarbageCollection();
 					SceneManager.getInstance().loadGameScene(engine, GameScene.this);
 				}
-	    		return false;
+	    		return true;
 	    	};
 	    };
 	    quitButton = new Sprite(150, 25, resourcesManager.game_quit_button_region, vbom){
@@ -1912,7 +1913,7 @@ public class GameScene extends BaseScene{
 					myGarbageCollection();
 					SceneManager.getInstance().loadMenuScene(engine, GameScene.this);
 	    		}
-	    		return false;
+	    		return true;
 	    	};
 	    };
 	    twitterButton = new Sprite(450, 190, resourcesManager.game_twitter_button_region, vbom) {
@@ -1928,7 +1929,7 @@ public class GameScene extends BaseScene{
 	    		    shareIntent.putExtra(Intent.EXTRA_TEXT, "My score in #ProtectTheTown is " + score + " points. And yours?");
 	    		    activity.tweetScore(shareIntent);
 	    		}
-	    		return false;
+	    		return true;
 	    	}
 	    };
 		
