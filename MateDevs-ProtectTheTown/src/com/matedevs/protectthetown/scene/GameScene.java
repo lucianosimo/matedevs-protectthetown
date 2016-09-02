@@ -46,7 +46,6 @@ import com.matedevs.protectthetown.base.BaseScene;
 import com.matedevs.protectthetown.manager.SceneManager;
 import com.matedevs.protectthetown.manager.SceneManager.SceneType;
 import com.matedevs.protectthetown.object.Bomb;
-import com.matedevs.protectthetown.object.Floor;
 import com.matedevs.protectthetown.object.House;
 import com.matedevs.protectthetown.object.LargeHouse;
 import com.matedevs.protectthetown.object.LargeRock;
@@ -126,6 +125,8 @@ public class GameScene extends BaseScene{
 	//Rectangle
 	private Rectangle fade;
 	private Rectangle shieldBar;
+	//private Rectangle[] floor;
+	private Rectangle floor;
 	
 	//Countdown
 	private Sprite countdownFrame1;
@@ -176,9 +177,10 @@ public class GameScene extends BaseScene{
 	private final static int HELP_WINDOW_INITIAL_Y = 1100;
 	
 	private final static int BASE_FLOOR_POSITION_Y = -200;
-	private final static int FLOOR_FIRST_POSITION_X = 80;
-	private final static int FLOOR_FIRST_POSITION_Y = 35;
-	private final static int FLOOR_DISTANCE_BETWEEN = 160;
+	//private final static int FLOOR_FIRST_POSITION_X = 80;
+	private final static int FLOOR_POSITION_Y = 0;
+	private final static int FLOOR_HEIGHT = 5;
+	//private final static int FLOOR_DISTANCE_BETWEEN = 160;
 	
 	private static final int ROCK_POSITIVE_VEL_X = 1;
 	private static final int ROCK_NEGATIVE_VEL_X = -1;
@@ -404,7 +406,8 @@ public class GameScene extends BaseScene{
 	 * Creates floor on level generation
 	 */
 	private void createFloor() {
-		Floor[] floor = new Floor[8];
+		//Floor[] floor = new Floor[8];
+		//Rectangle[] floor = new Rectangle[8];
  		
 		Sprite base_floor = new Sprite(screenWidth/2, BASE_FLOOR_POSITION_Y, resourcesManager.game_base_floor_region, vbom);
 		Body base_floor_body = PhysicsFactory.createBoxBody(physicsWorld, base_floor, BodyType.StaticBody, PhysicsFactory.createFixtureDef(0, 0, 0));
@@ -414,11 +417,24 @@ public class GameScene extends BaseScene{
 		
 		GameScene.this.attachChild(base_floor);
 		
-		for (int i = 0; i < floor.length; i++) {
-			floor[i] = new Floor(i * FLOOR_DISTANCE_BETWEEN + FLOOR_FIRST_POSITION_X, FLOOR_FIRST_POSITION_Y, vbom, camera, physicsWorld);
+		floor = new Rectangle(screenWidth / 2, FLOOR_POSITION_Y, screenWidth, FLOOR_HEIGHT, vbom);
+		floor.setAlpha(0);
+		floor.setUserData("floor");
+		floor.setCullingEnabled(true);
+		GameScene.this.attachChild(floor);
+		
+		//for (int i = 0; i < floor.length; i++) {
+			//floor[i] = new Rectangle(i * FLOOR_DISTANCE_BETWEEN + FLOOR_FIRST_POSITION_X, FLOOR_FIRST_POSITION_Y, vbom, camera, physicsWorld);
+			/*floor[i] = new Rectangle(i * FLOOR_DISTANCE_BETWEEN + FLOOR_FIRST_POSITION_X, FLOOR_FIRST_POSITION_Y, 160, 50, vbom);
+			floor[i].setUserData("floor");
+			FixtureDef fixture = PhysicsFactory.createFixtureDef(0, 0, 0);
+			fixture.filter.groupIndex = -2;
+			Body body = PhysicsFactory.createBoxBody(physicsWorld, floor[i], BodyType.StaticBody, fixture);
+			body.setUserData("floor");
+			body.setFixedRotation(true);
 			floor[i].setCullingEnabled(true);
-			GameScene.this.attachChild(floor[i]);
-		}
+			GameScene.this.attachChild(floor[i]);*/
+		//}
 	}
 	
 	public void firstGame() {
@@ -555,8 +571,12 @@ public class GameScene extends BaseScene{
 					}
 				}
 				
-				if (this.getX() < 0) {
+				/*if (this.getX() < 0) {
 					regenerateRocks(this.getRockBody());
+				}*/
+				
+				if (this.collidesWith(floor) && this.getRockBody().isActive()) {
+					destroyRock(this);
 				}
 				
 				if (this.collidesWith(dome) && this.getRockBody().isActive()) {
@@ -619,8 +639,12 @@ public class GameScene extends BaseScene{
 					}
 				}
 				
-				if (this.getX() < 0) {
+				/*if (this.getX() < 0) {
 					regenerateRocks(this.getSmallRockBody());
+				}*/
+				
+				if (this.collidesWith(floor) && this.getSmallRockBody().isActive()) {
+					destroySmallRock(this);
 				}
 				
 				if (this.collidesWith(dome) && this.getSmallRockBody().isActive()) {
@@ -994,8 +1018,12 @@ public class GameScene extends BaseScene{
 					});
 				}
 				
-				if (this.getX() < 0) {
+				/*if (this.getX() < 0) {
 					regenerateRocks(this.getLargeRockBody());
+				}*/
+				
+				if (this.collidesWith(floor) && this.getLargeRockBody().isActive()) {
+					destroyLargeRock(this);
 				}
 			}
 			
