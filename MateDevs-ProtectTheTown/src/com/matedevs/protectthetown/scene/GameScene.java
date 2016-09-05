@@ -119,6 +119,7 @@ public class GameScene extends BaseScene{
 	
 	//Dome
 	private Sprite dome;
+	private Rectangle domeCollider;
 	private Sprite shieldBarFrame;
 	private Sprite shieldBarLogo;
 	
@@ -579,7 +580,7 @@ public class GameScene extends BaseScene{
 					destroyRock(this);
 				}
 				
-				if (this.collidesWith(dome) && this.getRockBody().isActive()) {
+				if (this.collidesWith(domeCollider) && this.getRockBody().isActive()) {
 					final Rock ref = this;
 					engine.runOnUpdateThread(new Runnable() {
 						
@@ -647,7 +648,7 @@ public class GameScene extends BaseScene{
 					destroySmallRock(this);
 				}
 				
-				if (this.collidesWith(dome) && this.getSmallRockBody().isActive()) {
+				if (this.collidesWith(domeCollider) && this.getSmallRockBody().isActive()) {
 					final SmallRock ref = this;
 					engine.runOnUpdateThread(new Runnable() {
 						
@@ -734,7 +735,7 @@ public class GameScene extends BaseScene{
 			protected void onManagedUpdate(float pSecondsElapsed) {
 				super.onManagedUpdate(pSecondsElapsed);
 				if ((destroyAllEnemies && this.getSateliteBody().isActive() && availablePause && !gameOver) || 
-						(this.collidesWith(dome) && this.getSateliteBody().isActive())) {
+						(this.collidesWith(domeCollider) && this.getSateliteBody().isActive())) {
 					
 					if (this.getX() > 0 && this.getX() < screenWidth && this.getY() > 0 && this.getY() < screenHeight) {
 						final Satelite ref = this;
@@ -861,7 +862,7 @@ public class GameScene extends BaseScene{
 					}
 				}
 				
-				if (this.collidesWith(dome)) {
+				if (this.collidesWith(domeCollider)) {
 					final Ufo ref = this;
 					engine.runOnUpdateThread(new Runnable() {
 						
@@ -895,7 +896,7 @@ public class GameScene extends BaseScene{
 					resourcesManager.shotSound.play();
 					Shot shot = new Shot(this.getX(), this.getY(), vbom, camera, physicsWorld){
 						protected void onManagedUpdate(float pSecondsElapsed) {
-							if (this.collidesWith(dome)) {
+							if (this.collidesWith(domeCollider)) {
 								if (this.getX() > 0 && this.getX() < 1280 && this.getY() > 0 && this.getY() < 720) {
 									final Shot ref = this;
 									engine.runOnUpdateThread(new Runnable() {
@@ -919,7 +920,7 @@ public class GameScene extends BaseScene{
 					resourcesManager.shotSound.play();
 					Shot shot = new Shot(this.getX(), this.getY(), vbom, camera, physicsWorld) {
 						protected void onManagedUpdate(float pSecondsElapsed) {
-							if (this.collidesWith(dome)) {
+							if (this.collidesWith(domeCollider)) {
 								if (this.getX() > 0 && this.getX() < 1280 && this.getY() > 0 && this.getY() < 720) {
 									final Shot ref = this;
 									engine.runOnUpdateThread(new Runnable() {
@@ -943,7 +944,7 @@ public class GameScene extends BaseScene{
 					resourcesManager.shotSound.play();
 					Shot shot = new Shot(this.getX(), this.getY(), vbom, camera, physicsWorld) {
 						protected void onManagedUpdate(float pSecondsElapsed) {
-							if (this.collidesWith(dome)) {
+							if (this.collidesWith(domeCollider)) {
 								if (this.getX() > 0 && this.getX() < 1280 && this.getY() > 0 && this.getY() < 720) {
 									final Shot ref = this;
 									engine.runOnUpdateThread(new Runnable() {
@@ -1006,7 +1007,7 @@ public class GameScene extends BaseScene{
 						});
 					}
 				}
-				if (this.collidesWith(dome) && this.getLargeRockBody().isActive()) {
+				if (this.collidesWith(domeCollider) && this.getLargeRockBody().isActive()) {
 					final LargeRock ref = this;
 					engine.runOnUpdateThread(new Runnable() {
 						
@@ -2132,6 +2133,7 @@ public class GameScene extends BaseScene{
 			public boolean onAreaTouched(TouchEvent pSceneTouchEvent, float pTouchAreaLocalX, float pTouchAreaLocalY) {
 				if (pSceneTouchEvent.isActionDown()) {
 					final Repair ref = this;
+					resourcesManager.health.play();
 					engine.runOnUpdateThread(new Runnable() {
 						@Override
 						public void run() {
@@ -2187,6 +2189,7 @@ public class GameScene extends BaseScene{
 									@Override
 									public void onModifierStarted(IModifier<IEntity> pModifier, IEntity pItem) {
 										dome.setPosition(screenWidth/2, 175);
+										domeCollider.setPosition(screenWidth / 2, screenHeight / 4 + 100);
 										shieldBar.setWidth(185);
 										shieldBar.setVisible(true);
 										shieldBarFrame.setVisible(true);
@@ -2198,6 +2201,7 @@ public class GameScene extends BaseScene{
 									public void onModifierFinished(IModifier<IEntity> pModifier, IEntity pItem) {
 										resourcesManager.shield.stop();
 										dome.setPosition(-1500, -1500);
+										domeCollider.setPosition(-1500, 1500);
 										shieldBar.setVisible(false);
 										shieldBarFrame.setVisible(false);
 										shieldBarLogo.setVisible(false);
@@ -2230,8 +2234,10 @@ public class GameScene extends BaseScene{
 		shieldBarLogo = new Sprite(screenWidth/2 + 150 - 70, 670, resourcesManager.game_shield_bar_logo_region, vbom);
 		
 		dome = new Sprite(-1500, 1500, resourcesManager.game_dome_region, vbom);
+		domeCollider = new Rectangle(-1500, 1500, screenWidth, 10, vbom);
 		
 		shieldBar.setColor(0.314f, 0.157f, 0f);
+		domeCollider.setAlpha(0);
 		
 		shieldBar.setVisible(false);
 		shieldBarFrame.setVisible(false);
@@ -2241,6 +2247,7 @@ public class GameScene extends BaseScene{
 		gameHud.attachChild(shieldBar);
 		gameHud.attachChild(shieldBarLogo);
 		GameScene.this.attachChild(dome);
+		GameScene.this.attachChild(domeCollider);
 	}
 	
 	private ContactListener contactListener() {

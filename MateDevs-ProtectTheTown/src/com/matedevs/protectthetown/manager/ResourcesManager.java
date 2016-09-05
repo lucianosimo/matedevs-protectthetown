@@ -64,6 +64,7 @@ public class ResourcesManager {
 	//public Music gameMusic;
 	public Sound explosion;
 	public Sound shield;
+	public Sound health;
 	public Sound shotSound;
 	public Sound ufoSound;
 	
@@ -379,6 +380,7 @@ public class ResourcesManager {
 			//gameMusic = MusicFactory.createMusicFromAsset(activity.getMusicManager(), activity, "gameMusic.mp3");
 			//gameMusic.setLooping(true);
 			explosion = SoundFactory.createSoundFromAsset(activity.getSoundManager(), activity, "explosion.mp3");
+			health = SoundFactory.createSoundFromAsset(activity.getSoundManager(), activity, "health.mp3");
 			shield = SoundFactory.createSoundFromAsset(activity.getSoundManager(), activity, "shield.mp3");
 			shotSound = SoundFactory.createSoundFromAsset(activity.getSoundManager(), activity, "shotSound.mp3");
 			ufoSound = SoundFactory.createSoundFromAsset(activity.getSoundManager(), activity, "ufoSound.mp3");
@@ -391,11 +393,13 @@ public class ResourcesManager {
 		//gameMusic.stop();
 		
 		explosion.stop();
+		health.stop();
 		shield.stop();
 		shotSound.stop();
 		ufoSound.stop();
 		
 		activity.getSoundManager().remove(explosion);
+		activity.getSoundManager().remove(health);
 		activity.getSoundManager().remove(shield);
 		activity.getSoundManager().remove(shotSound);
 		activity.getSoundManager().remove(ufoSound);

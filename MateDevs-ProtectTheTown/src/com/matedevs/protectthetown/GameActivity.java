@@ -93,15 +93,6 @@ public class GameActivity extends BaseGameActivity implements GoogleApiClient.Co
 	    mInterstitialAd = new InterstitialAd(this);
         mInterstitialAd.setAdUnitId(ADMOB_AD_UNIT_ID);
         
-        /*
-         * BORRAR!!!!!!!!!!!!!!!!!!
-         */
-        UnityAds.setDebugMode(true);
-        UnityAds.setTestMode(true);
-        /*
-         * BORRAR!!!!!!!!!!!!!!!!!!
-         */
-        
         UnityAds.init((Activity)this, UNITY_ADS_GAME_ID, new IUnityAdsListener() {
 			
 			@Override
