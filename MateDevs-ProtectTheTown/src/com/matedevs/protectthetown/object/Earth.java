@@ -20,7 +20,6 @@ public class Earth extends Sprite{
 	public Earth(float pX, float pY, VertexBufferObjectManager vbom, Camera camera, PhysicsWorld physicsWorld) {
 		super(pX, pY, ResourcesManager.getInstance().game_earth_region.deepCopy(), vbom);
 		createPhysics(camera, physicsWorld);
-		//camera.setChaseEntity(this);
 	}
 	
 	private void createPhysics(final Camera camera, PhysicsWorld physicsWorld) {

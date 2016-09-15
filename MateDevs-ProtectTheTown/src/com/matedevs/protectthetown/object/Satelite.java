@@ -23,7 +23,6 @@ public class Satelite extends Sprite{
 	public Satelite(float pX, float pY, VertexBufferObjectManager vbom, Camera camera, PhysicsWorld physicsWorld) {
 		super(pX, pY, ResourcesManager.getInstance().game_satelite_region.deepCopy(), vbom);
 		createPhysics(camera, physicsWorld);
-		//camera.setChaseEntity(this);
 	}
 	
 	private void createPhysics(final Camera camera, PhysicsWorld physicsWorld) {
@@ -40,7 +39,7 @@ public class Satelite extends Sprite{
 			new Vector2(+0.39789f*width, +0.51613f*height),
 			new Vector2(-0.15493f*width, +0.28571f*height),	
 		};
-		//body = PhysicsFactory.createBoxBody(physicsWorld, this, BodyType.DynamicBody, fixture);
+
 		body = PhysicsFactory.createPolygonBody(physicsWorld, this, v, BodyType.DynamicBody, fixture);
 		body.setUserData("satelite");
 		body.setFixedRotation(true);

@@ -20,7 +20,6 @@ public class Floor extends Sprite{
 	public Floor(float pX, float pY, VertexBufferObjectManager vbom, Camera camera, PhysicsWorld physicsWorld) {
 		super(pX, pY, ResourcesManager.getInstance().game_floor_region.deepCopy(), vbom);
 		createPhysics(camera, physicsWorld);
-		//camera.setChaseEntity(this);
 	}
 	
 	private void createPhysics(final Camera camera, PhysicsWorld physicsWorld) {

@@ -55,13 +55,10 @@ public class MainMenuScene extends BaseScene implements IOnMenuItemClickListener
 		}
 		createBackground();
 		createMenuChildScene();
-		//resourcesManager.menuMusic.play();
-		//resourcesManager.menuMusic.setLooping(true);
 	}
 
 	@Override
 	public void onBackKeyPressed() {
-		//resourcesManager.menuMusic.stop();
 		System.exit(0);
 	}
 
@@ -82,12 +79,10 @@ public class MainMenuScene extends BaseScene implements IOnMenuItemClickListener
 	
 	private void createMenuChildScene() {
 		soundDisabled = new Sprite(51, 51, resourcesManager.menu_sound_disabled_button_region, vbom);
-		//musicDisabled = new Sprite(51, 51, resourcesManager.menu_music_disabled_button_region, vbom);
 		
 		//If soundEnabled = 0, enabled..if 1 disabled
 		SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(activity);
 		int soundEnabled = sharedPreferences.getInt("soundEnabled", 0);
-		//int musicEnabled = sharedPreferences.getInt("musicEnabled", 0);
 		if (soundEnabled == 1) {
 			activity.enableSound(false);
 			soundDisabled.setPosition(51, 51);
@@ -95,31 +90,9 @@ public class MainMenuScene extends BaseScene implements IOnMenuItemClickListener
 			activity.enableSound(true);
 			soundDisabled.setPosition(1500, 1500);
 		}
-		/*if (musicEnabled == 1) {
-			activity.enableMusic(false);
-			musicDisabled.setPosition(51, 51);
-		} else if (musicEnabled == 0) {
-			activity.enableMusic(true);
-			musicDisabled.setPosition(1500, 1500);
-		}*/
 		
 		menuChildScene = new MenuScene(camera);
 		menuChildScene.setPosition(screenWidth/2, screenHeight/2);
-		
-		//loadHighScore();
-		
-		/*highScoreText = new Text(0, -300, resourcesManager.highScoreFont, "High Score: 123456789", new TextOptions(HorizontalAlign.CENTER), vbom);
-		highScoreText.setText("High Score: " + highScore);
-		highScoreText.setColor(Color.BLACK_ARGB_PACKED_INT);*/
-		
-		/*Sprite play_button_background = new Sprite(0, -10, resourcesManager.menu_play_button_background_region, vbom);
-		play_button_background.registerEntityModifier(new LoopEntityModifier(new RotationModifier(60, 0, -(4 * 180))));
-		
-		Sprite rateus_button_background = new Sprite(-500, -225, resourcesManager.menu_rateus_button_background_region, vbom);
-		rateus_button_background.registerEntityModifier(new LoopEntityModifier(new RotationModifier(60, 0, 3 * 180)));
-		
-		Sprite global_scores_button_background = new Sprite(500, -225, resourcesManager.menu_rateus_button_background_region, vbom);
-		global_scores_button_background.registerEntityModifier(new LoopEntityModifier(new RotationModifier(60, 0, 3 * 180)));*/
 		
 		Sprite soundButton = new Sprite(-570, 290, resourcesManager.menu_sound_button_region, vbom) {
 			@Override
@@ -146,45 +119,12 @@ public class MainMenuScene extends BaseScene implements IOnMenuItemClickListener
 				return true;
 			}
 		};
-		/*Sprite musicButton = new Sprite(-570, 180, resourcesManager.menu_music_button_region, vbom) {
-			@Override
-			public boolean onAreaTouched(TouchEvent pSceneTouchEvent,float pTouchAreaLocalX, float pTouchAreaLocalY) {
-				if (pSceneTouchEvent.isActionDown()) {
-					Log.i("protect", "musicButton touched");
-					//If musicEnabled = 0, enabled..if 1 disabled
-					SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(activity);
-					int musicEnabled = sharedPreferences.getInt("musicEnabled", 0);
-					Log.i("protect", "musicEnabled " + musicEnabled);
-					Editor editor = sharedPreferences.edit();
-					if (musicEnabled == 1) {
-						musicEnabled = 0;
-						musicDisabled.setPosition(1500, 1500);
-						activity.enableMusic(true);
-					} else if (musicEnabled == 0) {
-						musicEnabled = 1;
-						musicDisabled.setPosition(51, 51);
-						activity.enableMusic(false);
-					}
-					editor.putInt("musicEnabled", musicEnabled);
-					editor.commit();
-				}
-				return true;
-			}
-		};*/
-		
+
 		menuChildScene.attachChild(soundButton);
-		//menuChildScene.attachChild(musicButton);
 		soundButton.attachChild(soundDisabled);
-		//musicButton.attachChild(musicDisabled);
-		
+
 		menuChildScene.registerTouchArea(soundButton);
-		//menuChildScene.registerTouchArea(musicButton);
-		
-		/*menuChildScene.attachChild(play_button_background);
-		menuChildScene.attachChild(rateus_button_background);
-		menuChildScene.attachChild(global_scores_button_background);*/
-		//menuChildScene.attachChild(highScoreText);
-		
+
 		final IMenuItem playMenuItem = new ScaleMenuItemDecorator(new SpriteMenuItem(MENU_PLAY, resourcesManager.menu_play_button_region, vbom), 1.2f, 1);
 		final IMenuItem rateusMenuItem = new ScaleMenuItemDecorator(new SpriteMenuItem(MENU_RATEUS, resourcesManager.menu_rateus_button_region, vbom), 1.2f, 1);
 		final IMenuItem globalScoresMenuItem = new ScaleMenuItemDecorator(new SpriteMenuItem(MENU_GLOBAL_SCORES, resourcesManager.menu_global_scores_button_region, vbom), 1.2f, 1);
@@ -211,7 +151,6 @@ public class MainMenuScene extends BaseScene implements IOnMenuItemClickListener
 	public boolean onMenuItemClicked(MenuScene pMenuScene, IMenuItem pMenuItem,	float pMenuItemLocalX, float pMenuItemLocalY) {
 		switch (pMenuItem.getID()) {
 			case MENU_PLAY:
-				//resourcesManager.menuMusic.stop();
 				SceneManager.getInstance().loadGameScene(engine, this);
 				return true;
 			case MENU_RATEUS:

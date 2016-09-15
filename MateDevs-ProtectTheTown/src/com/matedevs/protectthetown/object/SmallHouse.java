@@ -26,7 +26,6 @@ public abstract class SmallHouse extends Sprite{
 		super(pX, pY, ResourcesManager.getInstance().game_small_house_region.deepCopy(), vbom);
 		createPhysics(camera, physicsWorld);
 		energy = MAX_ENERGY;
-		//camera.setChaseEntity(this);
 	}
 	
 	private void createPhysics(final Camera camera, PhysicsWorld physicsWorld) {
